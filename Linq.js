@@ -62,7 +62,7 @@
     };
     Array.prototype.distinct ??= function (comparer) {
         comparer ??= (left, right) => Object.is(left, right);
-        let ret = new Array();
+        let ret = [];
         this.forEach((x) => {
             if (ret.findIndex((i) => comparer(x, i)) < 0) {
                 ret.push(x);
@@ -74,14 +74,14 @@
         return this.reduce(func, seed);
     };
     Array.prototype.select ??= function (selector) {
-        let ret = new Array();
+        let ret = [];
         this.forEach((x) => {
             ret.push(selector(x));
         });
         return ret;
     };
     Array.prototype.where ??= function (predicate) {
-        let ret = new Array();
+        let ret = [];
         this.forEach((x) => {
             if (predicate(x)) {
                 ret.push(x);
@@ -115,6 +115,12 @@
             return property(b) - property(a);
         });
     };
+    Array.prototype.withIndex ??= function* () {
+        let i = 0;
+        for (let item of this) {
+            yield [item, i++];
+        }
+    }
     Map.prototype.containsKey ??= function (key) {
         return this.has(key);
     };
