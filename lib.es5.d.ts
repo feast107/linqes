@@ -13,32 +13,51 @@ declare interface Array<T> {
 
 	contains(item : T) : boolean;
 
+	groupBy<TKey>(keySelector : (item : T) => TKey) : Generator<KeyedArray<T,TKey>, KeyedArray<T,TKey>, unknown>;
+
 	insert(index : number, item : T) : void;
 
 	remove(item : T) : boolean;
 
-	removeAt(index : number) : T | undefined;
-
 	removeAll(predicate : (item : T) => boolean) : void;
+
+	removeAt(index : number) : T | undefined;
 
 	select<TReturn>(selector : (item : T, index? : Number) => TReturn) : Generator<TReturn, TReturn, unknown>;
 
-	where(predicate : (item : T, index? : Number) => boolean) : Generator<T, T, unknown>;
+	selectMany<TReturn>(selector : (item : T, index? : Number) => Array<TReturn>) : Generator<TReturn, TReturn, unknown>;
 
-	// @ts-ignore
 	toDictionary<TKey, TValue>(keySelector : (item : T) => TKey, valueSelector : (item : T) => TValue) : Map<TKey, TValue>
+
+	where(predicate : (item : T, index? : Number) => boolean) : Generator<T, T, unknown>;
+}
+
+declare interface KeyedArray<T, TKey> extends Array<T> {
+	key : TKey;
 }
 
 // @ts-ignore
 declare interface Generator<T = unknown, TReturn = any, TNext = unknown> extends Iterator<T, TReturn, TNext> {
-	toArray() : Array<T>;
 
-	select<TReturn>(selector : (item : T) => TReturn) : Generator<TReturn, TReturn, unknown>;
+	any(predicate? : (item : T) => boolean) : T
 
-	where(predicate : (item : T) => boolean) : Generator<T, TReturn, unknown>;
+	first(predicate? : (item : T) => boolean) : T
 
 	firstOrDefault(predicate? : (item : T) => boolean) : T | null
 
-	first(predicate? : (item : T) => boolean) : T
+	forEach(action : (item : T) => void) : void;
+
+	groupBy<TKey>(keySelector : (item : T) => TKey) : Generator<KeyedArray<T,TKey>, KeyedArray<T,TKey>, unknown>;
+
+	select<TReturn>(selector : (item : T) => TReturn) : Generator<TReturn, TReturn, unknown>;
+
+	selectMany<TReturn>(selector : (item : T) => Array<TReturn>) : Generator<TReturn, TReturn, unknown>;
+
+	toArray() : Array<T>;
+
+	where(predicate : (item : T) => boolean) : Generator<T, TReturn, unknown>;
 }
 
+declare interface Map<TKey, TValue> {
+
+}
