@@ -48,7 +48,7 @@
 		let item = this.next();
 		while (!item.done)
 		{
-			const key = keySelector(item);
+			const key = keySelector(item.value);
 			let cache = map.get(key);
 			if (cache === undefined)
 			{
@@ -56,7 +56,7 @@
 				cache.key = key;
 				map.set(key, cache)
 			}
-			cache.push(item)
+			cache.push(item.value)
 			item = this.next();
 		}
 		for (let value of map.values())
