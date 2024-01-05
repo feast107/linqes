@@ -2,7 +2,7 @@
 
 (function ()
 {
-	(function (type)
+	function makeEnumerable(type)
 	{
 		type.aggregate ??= function (seed, accumulator)
 		{
@@ -430,6 +430,18 @@
 			}
 			return ret
 		}
+		type.toDictionary ??= function (keySelector, valueSelector)
+		{
+			let map = new Map();
+			for (const item of this)
+			{
+				const key = keySelector(item)
+				const value = valueSelector(item)
+				if (map.has(key)) throw 'Duplicate dictionary key'
+				map.set(key, value)
+			}
+			return map;
+		}
 		type.union ??= function* (source, comparer)
 		{
 			comparer ??= Object.is
@@ -484,52 +496,16 @@
 				if (predicate(item, count++)) yield item
 			}
 		}
-	})((function* ()
-	{
-		yield
-	})()
-	   .__proto__
-	   .__proto__);
+	}
 
-	globalThis.KeyValuePair = class
+	makeEnumerable((function* ()
 	{
-		constructor(key, value)
-		{
-			if (key == null) throw "key is required";
-			/*this.key = key;
-			this.value = value;
-			Object.freeze(this);*/
-			Object.defineProperty(this, 'key', {
-				get()
-				{
-					return key;
-				},
-				set(_)
-				{
-					throw 'KeyValuePair is readonly'
-				}
-			})
-			Object.defineProperty(this, 'value', {
-				get()
-				{
-					return value;
-				},
-				set(_)
-				{
-					throw 'KeyValuePair is readonly'
-				}
-			})
-		}
-	};
+	})().__proto__.__proto__)
+	makeEnumerable(globalThis.Array.prototype);
+	makeEnumerable(globalThis.Map.prototype);
 
 	(function (type)
 	{
-		Object.defineProperty(type, 'count', {
-			get()
-			{
-				return this.length;
-			}
-		})
 		type.add ??= function (item)
 		{
 			this.push(item);
@@ -541,69 +517,21 @@
 				this.push(item);
 			}
 		};
-		type.aggregate ??= function (seed, func)
-		{
-			return this.reduce(func, seed);
-		};
-		type.all ??= function (predicate)
-		{
-			return this.every(predicate);
-		};
-		type.any ??= function (predicate)
-		{
-			predicate ??= () => true;
-			for (let i = 0; i < this.length; i++)
-			{
-				if (predicate(this[i]))
-				{
-					return true;
-				}
-			}
-			return false;
-		};
-		type.append ??= function (element)
-		{
-			return this.asEnumerable().append(element)
-		}
-		type.asEnumerable ??= function* ()
+		type.asEnumerable = function* ()
 		{
 			for (const item of this) yield item;
-		}
-		type.chunk ??= function (size)
-		{
-			return this.asEnumerable().chunk(size)
 		}
 		type.clear ??= function ()
 		{
 			this.splice(0, this.length)
 		};
-		type.contains ??= function (item)
-		{
-			return this.findIndex((x) => Object.is(x, item)) > -1;
-		};
-		type.distinct ??= function (comparer)
-		{
-			return this.asEnumerable().distinct(comparer)
-		};
-		type.distinctBy ??= function (selector, comparer)
-		{
-			return this.asEnumerable().distinctBy(selector, comparer)
-		}
-		type.elementAt ??= function (index)
+		type.elementAt = function (index)
 		{
 			return this[index]
 		};
-		type.elementAtOrDefault ??= function (index)
+		type.elementAtOrDefault = function (index)
 		{
 			return this[index]
-		}
-		type.except ??= function (source, comparer)
-		{
-			return this.asEnumerable().except(source, comparer)
-		};
-		type.exceptBy ??= function (source, keySelector, comparer)
-		{
-			return this.asEnumerable().exceptBy(source, keySelector, comparer)
 		}
 		type.exists ??= function (predicate)
 		{
@@ -613,70 +541,14 @@
 		{
 			return this.where(match).toArray();
 		}
-		type.first ??= function (predicate)
-		{
-			return this.asEnumerable().first(predicate)
-		}
-		type.firstOrDefault ??= function (predicate, defaultValue)
-		{
-			return this.asEnumerable().firstOrDefault(predicate, defaultValue)
-		}
 		type.getRange ??= function (start, count)
 		{
 			return this.slice(start, count + start)
-		}
-		type.groupBy ??= function* (keySelector)
-		{
-			let map = new Map();
-			for (let item of this)
-			{
-				const key = keySelector(item);
-				let cache = map.get(key);
-				if (cache === undefined)
-				{
-					cache = [];
-					cache.key = key;
-					map.set(key, cache)
-				}
-				cache.push(item)
-			}
-			for (let value of map.values())
-			{
-				yield value
-			}
 		}
 		type.insert ??= function (index, item)
 		{
 			this.splice(index, 0, item)
 		};
-		type.last ??= function (predicate)
-		{
-			return this.asEnumerable().last(predicate)
-		}
-		type.lastOrDefault ??= function (predicate, defaultValue)
-		{
-			return this.asEnumerable().lastOrDefault(predicate, defaultValue)
-		}
-		type.order ??= function (comparer)
-		{
-			return this.asEnumerable().order(comparer)
-		};
-		type.orderDescending ??= function (comparer)
-		{
-			return this.asEnumerable().orderDescending(comparer)
-		};
-		type.orderBy ??= function (selector, comparer)
-		{
-			return this.asEnumerable().orderBy(selector, comparer)
-		};
-		type.orderByDescending ??= function (selector, comparer)
-		{
-			return this.asEnumerable().orderByDescending(selector, comparer)
-		};
-		type.prepend ??= function (element)
-		{
-			return this.asEnumerable().prepend(element)
-		}
 		type.remove ??= function (item)
 		{
 			let index = this.findIndex((x) => Object.is(x, item));
@@ -704,75 +576,18 @@
 		{
 			return this.splice(index, 1)[0];
 		};
-		type.select ??= function (selector)
-		{
-			return this.asEnumerable().select(selector)
-		};
-		type.selectMany ??= function (selector)
-		{
-			return this.asEnumerable().selectMany(selector)
-		};
-		type.single ??= function (predicate)
-		{
-			return this.asEnumerable().single(predicate)
-		};
-		type.singleOrDefault ??= function (predicate, defaultValue)
-		{
-			return this.asEnumerable().singleOrDefault(predicate, defaultValue)
-		};
-		type.skip ??= function (count)
-		{
-			return this.asEnumerable().skip(count)
-		};
-		type.skipLast ??= function (count)
-		{
-			return this.asEnumerable().skipLast(count)
-		};
-		type.skipWhile ??= function (predicate)
-		{
-			return this.asEnumerable().skipWhile(predicate)
-		};
-		type.take ??= function (countOrRange)
-		{
-			return this.asEnumerable().take(countOrRange)
-		};
-		type.takeLast ??= function (count)
-		{
-			return this.asEnumerable().takeLast(count)
-		};
-		type.takeWhile ??= function (predicate)
-		{
-			return this.asEnumerable().takeWhile(predicate)
-		};
-		type.toArray ??= function ()
+		type.toArray = function ()
 		{
 			return this;
 		}
-		type.toDictionary ??= function (keySelector, valueSelector)
-		{
-			let ret = new Map();
-			this.forEach((x) =>
-						 {
-							 ret.set(keySelector(x), valueSelector(x));
-						 });
-			return ret;
-		};
-		type.union ??= function (source, comparer)
-		{
-			return this.asEnumerable().union(source, comparer)
-		};
-		type.unionBy ??= function (source, keySelector, comparer)
-		{
-			return this.asEnumerable().unionBy(source, keySelector, comparer)
-		};
-		type.where ??= function (predicate)
-		{
-			return this.asEnumerable().where(predicate)
-		};
 	})(globalThis.Array.prototype);
 
 	(function (type)
 	{
+		type.asEnumerable = function* ()
+		{
+			for (const item of this) yield item;
+		}
 		type.containsKey ??= function (key)
 		{
 			return this.has(key);

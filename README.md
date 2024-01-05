@@ -1,4 +1,4 @@
-# Linq
+# eslinq
  Linq extension in javascript
 
 ## Example
