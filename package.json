@@ -1,0 +1,14 @@
+{
+	"name" : "eslinq",
+	"version" : "1.0.0",
+	"description" : "linq in es",
+	"main" : "index.js",
+	"types" : "index.d.ts",
+	"author" : "feast",
+	"repository" : {
+		"type" : "git",
+		"url" : "https://github.com/feast107/Linq-js.git"
+	},
+	"homepage" : "https://github.com/feast107/Linq-js",
+	"license" : "MIT"
+}
