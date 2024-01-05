@@ -1,307 +1,431 @@
 (function ()
 {
-	const Generator = (function* ()
+	(function (type)
+	{
+		type.any ??= function (match)
+		{
+			return this.firstOrDefault(match) !== null;
+		}
+		type.all ??= function (match)
+		{
+			let item = this.next();
+			while (!item.done)
+			{
+				if (!match(item.value)) return false;
+				item = this.next();
+			}
+			return true;
+		}
+		type.count ??= function (match)
+		{
+			match ??= () => true;
+			let count = 0;
+			let item = this.next();
+			while (!item.done)
+			{
+				if (match(item.value)) count++;
+				item = this.next();
+			}
+			return count;
+		}
+		type.concat ??= function* (source)
+		{
+			for (const item of this)
+			{
+				yield item
+			}
+			for (const item of source)
+			{
+				yield item
+			}
+		}
+		type.first ??= function (match)
+		{
+			const ret = this.firstOrDefault(match);
+			if (ret == null) throw 'Yield no result'
+			return ret;
+		}
+		type.firstOrDefault ??= function (match)
+		{
+			match ??= () => true;
+			let item = this.next();
+			while (!item.done)
+			{
+				if (match(item.value)) return item.value;
+				item = this.next();
+			}
+		}
+		type.forEach ??= function (action)
+		{
+			let item = this.next();
+			while (!item.done)
+			{
+				action(item.value)
+				item = this.next();
+			}
+		}
+		type.groupBy ??= function* (keySelector)
+		{
+			let map = new Map();
+			let item = this.next();
+			while (!item.done)
+			{
+				const key = keySelector(item.value);
+				let cache = map.get(key);
+				if (cache === undefined)
+				{
+					cache = [];
+					cache.key = key;
+					map.set(key, cache)
+				}
+				cache.push(item.value)
+				item = this.next();
+			}
+			for (let value of map.values()) yield value
+		}
+		type.last ??= function (match)
+		{
+			const ret = this.lastOrDefault(match)
+			if (ret == null) throw 'Yield no result'
+			return ret;
+		}
+		type.lastOrDefault ??= function (match)
+		{
+			match ??= () => true;
+			let last = null;
+			let item = this.next();
+			while (!item.done)
+			{
+				if (match(item.value)) last = item.value;
+				item = this.next();
+			}
+			return last;
+		}
+		type.reverse ??= function* ()
+		{
+			const arr = []
+			let item = this.next();
+			while (!item.done)
+			{
+				arr.push(item.value)
+				item = this.next();
+			}
+			while (arr.length > 0)
+			{
+				yield arr.pop()
+			}
+		}
+		type.select ??= function* (selector)
+		{
+			let item = this.next();
+			while (!item.done)
+			{
+				yield selector(item.value)
+				item = this.next();
+			}
+		}
+		type.selectMany ??= function* (selector)
+		{
+			let item = this.next();
+			while (!item.done)
+			{
+				for (let sub of selector(item.value))
+				{
+					yield sub
+				}
+				item = this.next();
+			}
+		}
+		type.toArray ??= function ()
+		{
+			const ret = [];
+			let item = this.next();
+			while (!item.done)
+			{
+				ret.push(item.value)
+				item = this.next();
+			}
+			return ret
+		}
+		type.where ??= function* (match)
+		{
+			let item = this.next();
+			while (!item.done)
+			{
+				const value = item.value;
+				if (match(value)) yield value
+				item = this.next();
+			}
+		}
+	})((function* ()
 	{
 		yield
 	})()
-	.__proto__
-	.__proto__;
-	Generator.any ??= function (match)
-	{
-		return this.firstOrDefault(match) !== null;
-	}
-	Generator.all ??= function (match)
-	{
-		let item = this.next();
-		while (!item.done)
-		{
-			if (!match(item.value)) return false;
-			item = this.next();
-		}
-		return true;
-	}
-	Generator.first ??= function (match)
-	{
-		const ret = this.firstOrDefault(match);
-		if (ret == null) throw 'No result'
-		return ret;
-	}
-	Generator.firstOrDefault ??= function (match)
-	{
-		let item = this.next();
-		match ??= () => true;
-		while (!item.done)
-		{
-			if (match(item.value)) return item.value;
-			item = this.next();
-		}
-	}
-	Generator.forEach ??= function (action)
-	{
-		let item = this.next();
-		while (!item.done)
-		{
-			action(item.value)
-			item = this.next();
-		}
-	}
-	Generator.groupBy ??= function* (keySelector)
-	{
-		let map = new Map();
-		let item = this.next();
-		while (!item.done)
-		{
-			const key = keySelector(item.value);
-			let cache = map.get(key);
-			if (cache === undefined)
-			{
-				cache = [];
-				cache.key = key;
-				map.set(key, cache)
-			}
-			cache.push(item.value)
-			item = this.next();
-		}
-		for (let value of map.values()) yield value
-	}
-	Generator.select ??= function* (selector)
-	{
-		let item = this.next();
-		while (!item.done)
-		{
-			yield selector(item.value)
-			item = this.next();
-		}
-	}
-	Generator.selectMany ??= function* (selector)
-	{
-		let item = this.next();
-		while (!item.done)
-		{
-			for (let sub of selector(item.value))
-			{
-				yield sub
-			}
-			item = this.next();
-		}
-	}
-	Generator.toArray ??= function ()
-	{
-		const ret = [];
-		let item = this.next();
-		while (!item.done)
-		{
-			ret.push(item.value)
-			item = this.next();
-		}
-		return ret
-	}
-	Generator.where ??= function* (match)
-	{
-		let item = this.next();
-		while (!item.done)
-		{
-			const value = item.value;
-			if (match(value)) yield value
-			item = this.next();
-		}
-	}
+	   .__proto__
+	   .__proto__);
+
 	globalThis.KeyValuePair = class
 	{
 		constructor(key, value)
 		{
 			if (key == null) throw "key is required";
-			this.key = key;
+			/*this.key = key;
 			this.value = value;
-			Object.freeze(this);
+			Object.freeze(this);*/
+			Object.defineProperty(this, 'key', {
+				get()
+				{
+					return key;
+				},
+				set(_)
+				{
+					throw 'KeyValuePair is readonly'
+				}
+			})
+			Object.defineProperty(this, 'value', {
+				get()
+				{
+					return value;
+				},
+				set(_)
+				{
+					throw 'KeyValuePair is readonly'
+				}
+			})
 		}
 	};
-	Array.prototype.add ??= function (item)
+
+	(function (type)
 	{
-		this.push(item);
-	};
-	Array.prototype.addRange ??= function (items)
-	{
-		items.forEach(
-		(x) =>
-		{
-			this.push(x);
-		});
-	};
-	Array.prototype.aggregate ??= function (seed, func)
-	{
-		return this.reduce(func, seed);
-	};
-	Array.prototype.all ??= function (match)
-	{
-		return this.every(match);
-	};
-	Array.prototype.any ??= function (match)
-	{
-		match ??= () => true;
-		for (let i = 0; i < this.length; i++)
-		{
-			if (match(this[i]))
+		Object.defineProperty(type, 'count', {
+			get()
 			{
-				return true;
+				return this.length;
 			}
-		}
-		return false;
-	};
-	Array.prototype.clear ??= function ()
-	{
-		while (this.length > 0)
+		})
+		type.add ??= function (item)
 		{
-			this.pop();
-		}
-	};
-	Array.prototype.contains ??= function (item)
-	{
-		return this.findIndex((x) => x === item) > -1;
-	};
-	Array.prototype.distinct ??= function (comparer)
-	{
-		comparer ??= (left, right) => Object.is(left, right);
-		let ret = [];
-		this.forEach((x) =>
-					 {
-						 if (ret.findIndex((i) => comparer(x, i)) < 0)
+			this.push(item);
+		};
+		type.addRange ??= function (items)
+		{
+			items.forEach(
+			(x) =>
+			{
+				this.push(x);
+			});
+		};
+		type.aggregate ??= function (seed, func)
+		{
+			return this.reduce(func, seed);
+		};
+		type.all ??= function (match)
+		{
+			return this.every(match);
+		};
+		type.any ??= function (match)
+		{
+			match ??= () => true;
+			for (let i = 0; i < this.length; i++)
+			{
+				if (match(this[i]))
+				{
+					return true;
+				}
+			}
+			return false;
+		};
+		type.clear ??= function ()
+		{
+			while (this.length > 0)
+			{
+				this.pop();
+			}
+		};
+		type.contains ??= function (item)
+		{
+			return this.findIndex((x) => Object.is(x, item)) > -1;
+		};
+		type.distinct ??= function (comparer)
+		{
+			comparer ??= Object.is;
+			let ret = [];
+			this.forEach((x) =>
 						 {
-							 ret.push(x);
-						 }
-					 });
-		return ret;
-	};
-	Array.prototype.groupBy ??= function* (keySelector)
-	{
-		let map = new Map();
-		for (let item of this)
+							 if (ret.findIndex((i) => comparer(x, i)) < 0)
+							 {
+								 ret.push(x);
+							 }
+						 });
+			return ret;
+		};
+		type.exists ??= function (match)
 		{
-			const key = keySelector(item);
-			let cache = map.get(key);
-			if (cache === undefined)
-			{
-				cache = [];
-				cache.key = key;
-				map.set(key, cache)
-			}
-			cache.push(item)
+			return this.firstOrDefault(match) != null;
 		}
-		for (let value of map.values())
+		type.findAll ??= function (match)
 		{
-			yield value
+			return this.where(match).toArray();
 		}
-	}
-	Array.prototype.insert ??= function (index, item)
-	{
-		this.splice(index, 0, item)
-	};
-	Array.prototype.remove ??= function (item)
-	{
-		let index = this.findIndex((x) => Object.is(x, item));
-		return index > -1 ? !!this.splice(index, 1) : false;
-	};
-	Array.prototype.removeAll ??= function (match)
-	{
-		let index = 0,
-			count = 0;
-		while (index < this.length)
+		type.first ??= function (match)
 		{
-			if (match(this[index]))
+			return this.select(x => x).first(match)
+		}
+		type.firstOrDefault ??= function (match)
+		{
+			return this.select(x => x).firstOrDefault(match)
+		}
+		type.groupBy ??= function* (keySelector)
+		{
+			let map = new Map();
+			for (let item of this)
 			{
-				this.splice(index, 1);
-				count++;
+				const key = keySelector(item);
+				let cache = map.get(key);
+				if (cache === undefined)
+				{
+					cache = [];
+					cache.key = key;
+					map.set(key, cache)
+				}
+				cache.push(item)
 			}
-			else
+			for (let value of map.values())
 			{
-				index++;
+				yield value
 			}
 		}
-		return count;
-	};
-	Array.prototype.removeAt ??= function (index)
-	{
-		return this.splice(index, 1)[0];
-	};
-	Array.prototype.select ??= function* (selector)
-	{
-		for (let i = 0; i < this.length; i++)
+		type.insert ??= function (index, item)
 		{
-			yield selector(this[i], i)
+			this.splice(index, 0, item)
+		};
+		type.last ??= function (match)
+		{
+			return this.select(x => x).last(match)
 		}
-	};
-	Array.prototype.selectMany ??= function* (selector)
-	{
-		for (let i = 0; i < this.length; i++)
+		type.lastOrDefault ??= function (match)
 		{
-			for (let item of selector(this[i], i))
+			return this.select(x => x).lastOrDefault(match)
+		}
+		type.remove ??= function (item)
+		{
+			let index = this.findIndex((x) => Object.is(x, item));
+			return index > -1 ? !!this.splice(index, 1) : false;
+		};
+		type.removeAll ??= function (match)
+		{
+			let index = 0,
+				count = 0;
+			while (index < this.length)
 			{
-				yield item
+				if (match(this[index]))
+				{
+					this.splice(index, 1);
+					count++;
+				}
+				else
+				{
+					index++;
+				}
 			}
-		}
-	};
-	Array.prototype.toDictionary ??= function (keySelector, valueSelector)
-	{
-		let ret = new Map();
-		this.forEach((x) =>
-					 {
-						 ret.set(keySelector(x), valueSelector(x));
-					 });
-		return ret;
-	};
-	Array.prototype.orderBy ??= function (selector)
-	{
-		return this.sort(
-		function (a, b)
+			return count;
+		};
+		type.removeAt ??= function (index)
 		{
-			return selector(a) - selector(b);
-		});
-	};
-	Array.prototype.orderByDescending ??= function (selector)
-	{
-		return this.sort(
-		function (a, b)
+			return this.splice(index, 1)[0];
+		};
+		type.select ??= function* (selector)
 		{
-			return selector(b) - selector(a);
-		});
-	};
-	Array.prototype.where ??= function* (match)
-	{
-		for (let i = 0; i < this.length; i++)
-		{
-			const curr = this[i]
-			if (match(curr, i))
+			let index = 0;
+			for (const item of this)
 			{
-				yield curr;
+				yield selector(item, index++)
 			}
-		}
-	};
-	Map.prototype.containsKey ??= function (key)
-	{
-		return this.has(key);
-	};
-	Map.prototype.containsValue ??= function (value)
-	{
-		let iter = this.entries();
-		let item = iter.next();
-		while (!item.done)
+		};
+		type.selectMany ??= function* (selector)
 		{
-			if (Object.is(item.value[1], value))
+			for (let i = 0; i < this.length; i++)
 			{
-				return true;
+				for (let item of selector(this[i], i))
+				{
+					yield item
+				}
 			}
-			item = iter.next();
+		};
+		type.toArray ??= function ()
+		{
+			return this;
 		}
-		return false;
-	};
-	Map.prototype.tryAdd ??= function (key, value)
+		type.toDictionary ??= function (keySelector, valueSelector)
+		{
+			let ret = new Map();
+			this.forEach((x) =>
+						 {
+							 ret.set(keySelector(x), valueSelector(x));
+						 });
+			return ret;
+		};
+		type.orderBy ??= function (selector)
+		{
+			return this.sort(
+			function (a, b)
+			{
+				return selector(a) - selector(b);
+			});
+		};
+		type.orderByDescending ??= function (selector)
+		{
+			return this.sort(
+			function (a, b)
+			{
+				return selector(b) - selector(a);
+			});
+		};
+		type.where ??= function* (match)
+		{
+			for (let i = 0; i < this.length; i++)
+			{
+				const curr = this[i]
+				if (match(curr, i))
+				{
+					yield curr;
+				}
+			}
+		};
+	})(Array.prototype);
+
+
+	(function (type)
 	{
-		return !(this.has(key) || !this.set(key, value));
-	};
-	Map.prototype.tryGetValue ??= function (key, valueGetter)
-	{
-		let ret = this.get(key);
-		valueGetter(ret);
-		return ret != null;
-	};
+		type.containsKey ??= function (key)
+		{
+			return this.has(key);
+		};
+		type.containsValue ??= function (value)
+		{
+			let iter = this.entries();
+			let item = iter.next();
+			while (!item.done)
+			{
+				if (Object.is(item.value[1], value))
+				{
+					return true;
+				}
+				item = iter.next();
+			}
+			return false;
+		};
+		type.tryAdd ??= function (key, value)
+		{
+			return !(this.has(key) || !this.set(key, value));
+		};
+		type.tryGetValue ??= function (key, valueGetter)
+		{
+			let ret = this.get(key);
+			valueGetter(ret);
+			return ret != null;
+		};
+	})(Map.prototype)
+
+
 })();
