@@ -1,3 +1,108 @@
+// @ts-ignore
+declare interface Generator<T = unknown, TReturn = any, TNext = unknown> extends Iterator<T, TReturn, TNext> {
+
+	aggregate<TSeed, TReturn>(seed : TSeed, accumulate : (seed : TSeed, item : T) => TReturn) : TReturn
+
+	all(match : (item : T) => boolean) : boolean
+
+	any() : boolean
+
+	any(match : (item : T) => boolean) : boolean
+
+	chunk(size : number) : Generator<Array<T>, Array<T>, unknown>
+
+	count() : number
+
+	count(match : (item : T) => boolean) : number
+
+	concat(source : Array<T>) : Generator<T, T, TNext>
+
+	distinct() : Generator<T, T, TNext>
+
+	distinct(comparer : (left : T, right : T) => boolean) : Generator<T, T, TNext>
+
+	distinctBy<TKey>(selector : (item : T) => TKey) : Generator<T, T, TNext>
+
+	distinctBy<TKey>(selector : (item : T) => TKey, comparer : (left : T, right : T) => boolean) : Generator<T, T, TNext>
+
+	elementAt(index : number) : T
+
+	elementAtOrDefault(index : number) : T | null
+
+	except(source : Array<T>) : Generator<T, T, TNext>
+
+	except(source : Array<T>, comparer : (left : T, right : T) => boolean) : Generator<T, T, TNext>
+
+	exceptBy<TKey>(source : Array<T>, keySelector : (item : T) => TKey) : Generator<T, T, TNext>
+
+	exceptBy<TKey>(source : Array<T>, keySelector : (item : T) => TKey, comparer : (left : T, right : T) => boolean) : Generator<T, T, TNext>
+
+	first() : T
+
+	first(match? : (item : T) => boolean) : T
+
+	firstOrDefault(match : (item : T) => boolean) : T | null
+
+	forEach(action : (item : T) => void) : void;
+
+	groupBy<TKey>(keySelector : (item : T) => TKey) : Generator<KeyedArray<T, TKey>, KeyedArray<T, TKey>, TNext>
+
+	last() : T
+
+	last(match : (item : T) => boolean) : T
+
+	lastOrDefault() : T | null
+
+	lastOrDefault(match : (item : T) => boolean) : T | null
+
+	prepend(item : T) : Generator<T, T, TNext>
+
+	reverse() : Generator<T, T, TNext>
+
+	select<TReturn>(selector : (item : T) => TReturn) : Generator<TReturn, TReturn, unknown>
+
+	select<TReturn>(selector : (item : T, index : number) => TReturn) : Generator<TReturn, TReturn, unknown>
+
+	selectMany<TReturn>(selector : (item : T) => Array<TReturn>) : Generator<TReturn, TReturn, unknown>
+
+	single() : T
+
+	single(match : (item : T) => boolean) : T
+
+	singleOrDefault() : T | null
+
+	singleOrDefault(match : (item : T) => boolean) : T | null
+
+	skip(count : number) : Generator<T, TReturn, TNext>
+
+	skipLast(count : number) : Generator<T, TReturn, TNext>
+
+	skipWhile(match : (item : T) => boolean) : Generator<T, TReturn, TNext>
+
+	take(count : number) : Generator<T, TReturn, TNext>
+
+	take(range : [start : number, end : number]) : Generator<T, TReturn, TNext>
+
+	takeLast(count : number) : Generator<T, TReturn, TNext>
+
+	takeWhile(match : (item : T) => boolean) : Generator<T, TReturn, TNext>
+
+	takeWhile(match : (item : T, index : number) => boolean) : Generator<T, TReturn, TNext>
+
+	toArray() : Array<T>
+
+	union(source : Array<T>) : Generator<T, TReturn, TNext>
+
+	union(source : Array<T>, comparer : (left : T, right : T) => boolean) : Generator<T, TReturn, TNext>
+
+	unionBy<TKey>(source : Array<T>, keySelector : (item : T) => TKey) : Generator<T, TReturn, TNext>
+
+	unionBy<TKey>(source : Array<T>, keySelector : (item : T) => TKey, comparer : (left : T, right : T) => boolean) : Generator<T, TReturn, TNext>
+
+	where(match : (item : T) => boolean) : Generator<T, TReturn, TNext>
+}
+
+
 declare interface Array<T> {
 	count : number;
 
@@ -76,73 +181,6 @@ declare interface KeyedArray<T, TKey> extends Array<T> {
 	key : TKey;
 }
 
-// @ts-ignore
-declare interface Generator<T = unknown, TReturn = any, TNext = unknown> extends Iterator<T, TReturn, TNext> {
-
-	aggregate<TSeed, TReturn>(seed : TSeed, accumulate : (seed : TSeed, item : T) => TReturn) : TReturn
-
-	all(match : (item : T) => boolean) : boolean
-
-	any() : boolean
-
-	any(match : (item : T) => boolean) : boolean
-
-	count() : number
-
-	count(match : (item : T) => boolean) : number
-
-	concat(source : Array<T>) : Generator<T, T, TNext>
-
-	distinct() : Generator<T, T, TNext>
-
-	distinct(comparer : (left : T, right : T) => boolean) : Generator<T, T, TNext>
-
-	distinctBy<TKey>(selector : (item : T) => TKey) : Generator<T, T, TNext>
-
-	distinctBy<TKey>(selector : (item : T) => TKey, comparer : (left : T, right : T) => boolean) : Generator<T, T, TNext>
-
-	first() : T
-
-	first(match? : (item : T) => boolean) : T
-
-	firstOrDefault() : T | null
-
-	firstOrDefault(match : (item : T) => boolean) : T | null
-
-	forEach(action : (item : T) => void) : void;
-
-	groupBy<TKey>(keySelector : (item : T) => TKey) : Generator<KeyedArray<T, TKey>, KeyedArray<T, TKey>, TNext>
-
-	last() : T
-
-	last(match : (item : T) => boolean) : T
-
-	lastOrDefault() : T | null
-
-	lastOrDefault(match : (item : T) => boolean) : T | null
-
-	reverse() : Generator<T, T, TNext>
-
-	select<TReturn>(selector : (item : T) => TReturn) : Generator<TReturn, TReturn, unknown>
-
-	select<TReturn>(selector : (item : T, index : number) => TReturn) : Generator<TReturn, TReturn, unknown>
-
-	selectMany<TReturn>(selector : (item : T) => Array<TReturn>) : Generator<TReturn, TReturn, unknown>
-
-	take(count : number) : Generator<T, TReturn, TNext>
-
-	take(range : [start : number, end : number]) : Generator<T, TReturn, TNext>
-
-	takeLast(count : number) : Generator<T, TReturn, TNext>
-
-	takeWhile(match : (item : T) => boolean) : Generator<T, TReturn, TNext>
-
-	takeWhile(match : (item : T, index : number) => boolean) : Generator<T, TReturn, TNext>
-
-	toArray() : Array<T>
-
-	where(match : (item : T) => boolean) : Generator<T, TReturn, TNext>
-}
 
 declare interface KeyValuePair<TKey, TValue> {
 	key : TKey;

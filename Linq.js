@@ -21,6 +21,20 @@
 			for (const item of this) yield item
 			yield item
 		}
+		type.chunk ??= function* (size)
+		{
+			let chunk = []
+			for (const item of this)
+			{
+				if (chunk.length === size)
+				{
+					yield chunk
+					chunk = []
+				}
+				chunk.push(item)
+			}
+			yield chunk
+		}
 		type.count ??= function (match)
 		{
 			match ??= () => true;
@@ -58,6 +72,55 @@
 				}
 			}
 			for (const item of stack) yield item
+		}
+		type.elementAt ??= function (index)
+		{
+			const ret = this.elementAtOrDefault(index);
+			if (ret == null) throw 'Yield no result'
+			return ret;
+		}
+		type.elementAtOrDefault ??= function (index)
+		{
+			for (const item of this)
+			{
+				if (index === 0) return item;
+				index--;
+			}
+			return null;
+		}
+		type.except ??= function* (source, comparer)
+		{
+			comparer ??= Object.is
+			const compares = []
+			for (const item of source)
+			{
+				compares.push(item)
+			}
+			for (const item of this)
+			{
+				if (compares.findIndex(x => comparer(x, item)) < 0)
+				{
+					yield item
+					compares.push(item)
+				}
+			}
+		}
+		type.exceptBy ??= function* (source, keySelector, comparer)
+		{
+			comparer ??= Object.is
+			const compares = []
+			for (const item of source)
+			{
+				compares.push(item)
+			}
+			for (const item of this)
+			{
+				if (compares.findIndex(x => comparer(keySelector(x), keySelector(item))) < 0)
+				{
+					yield item
+					compares.push(item)
+				}
+			}
 		}
 		type.first ??= function (match)
 		{
@@ -113,6 +176,11 @@
 			}
 			return last;
 		}
+		type.prepend ??= function* (item)
+		{
+			yield item;
+			for (const item of this) yield item
+		}
 		type.reverse ??= function* ()
 		{
 			const arr = []
@@ -141,6 +209,58 @@
 				{
 					yield sub
 				}
+			}
+		}
+		type.single ??= function (match)
+		{
+			const ret = this.singleOrDefault(match)
+			if (ret == null) throw 'Yield no result'
+			return ret;
+		}
+		type.singleOrDefault ??= function (match)
+		{
+			match ??= () => true
+			let single = null
+			for (const item of this)
+			{
+				if (match(item))
+				{
+					if (single != null) throw 'Duplicate item of single'
+					single = item;
+				}
+			}
+			return single
+		}
+		type.skip ??= function* (count)
+		{
+			for (const item of this)
+			{
+				count--;
+				if (count < 0)
+				{
+					yield item
+				}
+			}
+		}
+		type.skipLast ??= function* (count)
+		{
+			const stack = []
+			for (const item of this)
+			{
+				stack.push(item)
+				if (stack.length > count)
+				{
+					yield stack.shift()
+				}
+			}
+		}
+		type.skipWhile ??= function* (match)
+		{
+			let start = false
+			for (const item of this)
+			{
+				if (start) yield item
+				else if (match(item)) start = true;
 			}
 		}
 		type.take ??= function* (count)
@@ -219,6 +339,52 @@
 				ret.push(item)
 			}
 			return ret
+		}
+		type.union ??= function* (source, comparer)
+		{
+			comparer ??= Object.is
+			const union = []
+			for (const item of this)
+			{
+				if (union.findIndex(x => comparer(x, item)) < 0)
+				{
+					union.push(item)
+				}
+			}
+			for (const item of source)
+			{
+				if (union.findIndex(x => comparer(x, item)) < 0)
+				{
+					union.push(item)
+				}
+			}
+			for (const item of union)
+			{
+				yield item
+			}
+		}
+		type.unionBy ??= function* (source, keySelector, comparer)
+		{
+			comparer ??= Object.is
+			const union = []
+			for (const item of this)
+			{
+				if (union.findIndex(x => comparer(keySelector(x), keySelector(item))) < 0)
+				{
+					union.push(item)
+				}
+			}
+			for (const item of source)
+			{
+				if (union.findIndex(x => comparer(keySelector(x), keySelector(item))) < 0)
+				{
+					union.push(item)
+				}
+			}
+			for (const item of union)
+			{
+				yield item
+			}
 		}
 		type.where ??= function* (match)
 		{
@@ -472,7 +638,6 @@
 		};
 	})(Array.prototype);
 
-
 	(function (type)
 	{
 		type.containsKey ??= function (key)
@@ -504,6 +669,5 @@
 			return ret != null;
 		};
 	})(Map.prototype)
-
 
 })();
