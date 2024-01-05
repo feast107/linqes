@@ -1,14 +1,23 @@
 {
 	"name" : "eslinq",
 	"version" : "1.0.0",
-	"description" : "linq in es",
+	"description" : "linq in es, automated extensions on prototype",
 	"main" : "index.js",
 	"types" : "index.d.ts",
-	"author" : "feast",
+	"author" : "Feast",
 	"repository" : {
 		"type" : "git",
 		"url" : "https://github.com/feast107/Linq-js.git"
 	},
 	"homepage" : "https://github.com/feast107/Linq-js",
-	"license" : "MIT"
+	"license" : "MIT",
+	"keywords" : [
+		"linq",
+		"extension",
+		"fluent",
+		"list",
+		"enumerable",
+		"generator",
+		"iterator"
+	]
 }
