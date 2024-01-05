@@ -16,10 +16,10 @@
 		{
 			return this.firstOrDefault(match) !== null;
 		}
-		type.append ??= function* (item)
+		type.append ??= function* (element)
 		{
 			for (const item of this) yield item
-			yield item
+			yield element
 		}
 		type.chunk ??= function* (size)
 		{
@@ -35,17 +35,23 @@
 			}
 			yield chunk
 		}
+		type.concat ??= function* (source)
+		{
+			for (const item of this) yield item
+			for (const item of source) yield item
+		}
+		type.contains ??= function (value, comparer)
+		{
+			comparer ??= Object.is;
+			for (const item of this) if (comparer(value, item)) return true;
+			return false
+		}
 		type.count ??= function (match)
 		{
 			match ??= () => true;
 			let count = 0;
 			for (const item of this) if (match(item)) count++;
 			return count;
-		}
-		type.concat ??= function* (source)
-		{
-			for (const item of this) yield item
-			for (const item of source) yield item
 		}
 		type.distinct ??= function* (comparer)
 		{
@@ -176,9 +182,9 @@
 			}
 			return last;
 		}
-		type.prepend ??= function* (item)
+		type.prepend ??= function* (element)
 		{
-			yield item;
+			yield element;
 			for (const item of this) yield item
 		}
 		type.reverse ??= function* ()
@@ -388,9 +394,10 @@
 		}
 		type.where ??= function* (match)
 		{
+			let count = 0
 			for (const item of this)
 			{
-				if (match(item)) yield item
+				if (match(item, count++)) yield item
 			}
 		}
 	})((function* ()
@@ -471,9 +478,17 @@
 			}
 			return false;
 		};
+		type.append ??= function (element)
+		{
+			return this.asEnumerable().append(element)
+		}
 		type.asEnumerable ??= function* ()
 		{
 			for (const item of this) yield item;
+		}
+		type.chunk ??= function (size)
+		{
+			return this.asEnumerable().chunk(size)
 		}
 		type.clear ??= function ()
 		{
@@ -488,17 +503,28 @@
 		};
 		type.distinct ??= function (comparer)
 		{
-			comparer ??= Object.is;
-			let ret = [];
-			this.forEach((x) =>
-						 {
-							 if (ret.findIndex((i) => comparer(x, i)) < 0)
-							 {
-								 ret.push(x);
-							 }
-						 });
-			return ret;
+			return this.asEnumerable().distinct(comparer)
 		};
+		type.distinctBy ??= function (selector, comparer)
+		{
+			return this.asEnumerable().distinctBy(selector, comparer)
+		}
+		type.elementAt ??= function (index)
+		{
+			return this[index]
+		};
+		type.elementAtOrDefault ??= function (index)
+		{
+			return this[index]
+		}
+		type.except ??= function (source, comparer)
+		{
+			return this.asEnumerable().except(source, comparer)
+		};
+		type.exceptBy ??= function (source, keySelector, comparer)
+		{
+			return this.asEnumerable().exceptBy(source, keySelector, comparer)
+		}
 		type.exists ??= function (match)
 		{
 			return this.firstOrDefault(match) != null;
@@ -551,6 +577,26 @@
 		{
 			return this.asEnumerable().lastOrDefault(match)
 		}
+		type.orderBy ??= function (selector)
+		{
+			return this.sort(
+			function (a, b)
+			{
+				return selector(a) - selector(b);
+			});
+		};
+		type.orderByDescending ??= function (selector)
+		{
+			return this.sort(
+			function (a, b)
+			{
+				return selector(b) - selector(a);
+			});
+		};
+		type.prepend ??= function (element)
+		{
+			return this.asEnumerable().prepend(element)
+		}
 		type.remove ??= function (item)
 		{
 			let index = this.findIndex((x) => Object.is(x, item));
@@ -578,23 +624,45 @@
 		{
 			return this.splice(index, 1)[0];
 		};
-		type.select ??= function* (selector)
+		type.select ??= function (selector)
 		{
-			let index = 0;
-			for (const item of this)
-			{
-				yield selector(item, index++)
-			}
+			return this.asEnumerable().select(selector)
 		};
-		type.selectMany ??= function* (selector)
+		type.selectMany ??= function (selector)
 		{
-			for (let i = 0; i < this.length; i++)
-			{
-				for (let item of selector(this[i], i))
-				{
-					yield item
-				}
-			}
+			return this.asEnumerable().selectMany(selector)
+		};
+		type.single ??= function (match)
+		{
+			return this.asEnumerable().single(match)
+		};
+		type.singleOrDefault ??= function (match)
+		{
+			return this.asEnumerable().singleOrDefault(match)
+		};
+		type.skip ??= function (count)
+		{
+			return this.asEnumerable().skip(count)
+		};
+		type.skipLast ??= function (count)
+		{
+			return this.asEnumerable().skipLast(count)
+		};
+		type.skipWhile ??= function (match)
+		{
+			return this.asEnumerable().skipWhile(match)
+		};
+		type.take ??= function (countOrRange)
+		{
+			return this.asEnumerable().take(countOrRange)
+		};
+		type.takeLast ??= function (count)
+		{
+			return this.asEnumerable().takeLast(count)
+		};
+		type.takeWhile ??= function (match)
+		{
+			return this.asEnumerable().takeWhile(match)
 		};
 		type.toArray ??= function ()
 		{
@@ -609,32 +677,17 @@
 						 });
 			return ret;
 		};
-		type.orderBy ??= function (selector)
+		type.union ??= function (source, comparer)
 		{
-			return this.sort(
-			function (a, b)
-			{
-				return selector(a) - selector(b);
-			});
+			return this.asEnumerable().union(source, comparer)
 		};
-		type.orderByDescending ??= function (selector)
+		type.unionBy ??= function (source, keySelector, comparer)
 		{
-			return this.sort(
-			function (a, b)
-			{
-				return selector(b) - selector(a);
-			});
+			return this.asEnumerable().unionBy(source, keySelector, comparer)
 		};
-		type.where ??= function* (match)
+		type.where ??= function (match)
 		{
-			for (let i = 0; i < this.length; i++)
-			{
-				const curr = this[i]
-				if (match(curr, i))
-				{
-					yield curr;
-				}
-			}
+			return this.asEnumerable().where(match)
 		};
 	})(Array.prototype);
 
