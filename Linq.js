@@ -6,30 +6,33 @@
 	})()
 	.__proto__
 	.__proto__;
-	Generator.any ??= function (predicate)
+	Generator.any ??= function (match)
 	{
-		return this.firstOrDefault(predicate) !== null;
+		return this.firstOrDefault(match) !== null;
 	}
-	Generator.first ??= function (predicate)
+	Generator.all ??= function (match)
 	{
-		const ret = this.firstOrDefault(predicate);
+		let item = this.next();
+		while (!item.done)
+		{
+			if (!match(item.value)) return false;
+			item = this.next();
+		}
+		return true;
+	}
+	Generator.first ??= function (match)
+	{
+		const ret = this.firstOrDefault(match);
 		if (ret == null) throw 'No result'
 		return ret;
 	}
-	Generator.firstOrDefault ??= function (predicate)
+	Generator.firstOrDefault ??= function (match)
 	{
 		let item = this.next();
-		if (predicate == null)
-		{
-			if (item.done) return null;
-			return item.value;
-		}
+		match ??= () => true;
 		while (!item.done)
 		{
-			if (predicate(item.value))
-			{
-				return item.value;
-			}
+			if (match(item.value)) return item.value;
 			item = this.next();
 		}
 	}
@@ -59,10 +62,7 @@
 			cache.push(item.value)
 			item = this.next();
 		}
-		for (let value of map.values())
-		{
-			yield value
-		}
+		for (let value of map.values()) yield value
 	}
 	Generator.select ??= function* (selector)
 	{
@@ -96,13 +96,13 @@
 		}
 		return ret
 	}
-	Generator.where ??= function* (predicate)
+	Generator.where ??= function* (match)
 	{
 		let item = this.next();
 		while (!item.done)
 		{
 			const value = item.value;
-			if (predicate(value)) yield value
+			if (match(value)) yield value
 			item = this.next();
 		}
 	}
@@ -116,7 +116,6 @@
 			Object.freeze(this);
 		}
 	};
-
 	Array.prototype.add ??= function (item)
 	{
 		this.push(item);
@@ -133,15 +132,16 @@
 	{
 		return this.reduce(func, seed);
 	};
-	Array.prototype.all ??= function (predicate)
+	Array.prototype.all ??= function (match)
 	{
-		return this.every(predicate);
+		return this.every(match);
 	};
-	Array.prototype.any ??= function (predicate)
+	Array.prototype.any ??= function (match)
 	{
+		match ??= () => true;
 		for (let i = 0; i < this.length; i++)
 		{
-			if (predicate(this[i]))
+			if (match(this[i]))
 			{
 				return true;
 			}
@@ -201,13 +201,13 @@
 		let index = this.findIndex((x) => Object.is(x, item));
 		return index > -1 ? !!this.splice(index, 1) : false;
 	};
-	Array.prototype.removeAll ??= function (predicate)
+	Array.prototype.removeAll ??= function (match)
 	{
 		let index = 0,
 			count = 0;
 		while (index < this.length)
 		{
-			if (predicate(this[index]))
+			if (match(this[index]))
 			{
 				this.splice(index, 1);
 				count++;
@@ -249,33 +249,33 @@
 					 });
 		return ret;
 	};
-	Array.prototype.orderBy ??= function (property)
+	Array.prototype.orderBy ??= function (selector)
 	{
-		return this.sort(function (a, b)
-						 {
-							 return property(a) - property(b);
-						 });
+		return this.sort(
+		function (a, b)
+		{
+			return selector(a) - selector(b);
+		});
 	};
-	Array.prototype.orderByDescending ??= function (property)
+	Array.prototype.orderByDescending ??= function (selector)
 	{
-		return this.sort(function (a, b)
-						 {
-							 return property(b) - property(a);
-						 });
+		return this.sort(
+		function (a, b)
+		{
+			return selector(b) - selector(a);
+		});
 	};
-	Array.prototype.where ??= function* (predicate)
+	Array.prototype.where ??= function* (match)
 	{
 		for (let i = 0; i < this.length; i++)
 		{
 			const curr = this[i]
-			if (predicate(curr, i))
+			if (match(curr, i))
 			{
 				yield curr;
 			}
 		}
 	};
-
-
 	Map.prototype.containsKey ??= function (key)
 	{
 		return this.has(key);
