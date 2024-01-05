@@ -1,5 +1,5 @@
 {
-	"name" : "eslinq",
+	"name" : "linqes",
 	"version" : "1.0.0",
 	"description" : "linq in es, automated extensions on prototype",
 	"main" : "index.js",
@@ -7,9 +7,9 @@
 	"author" : "Feast",
 	"repository" : {
 		"type" : "git",
-		"url" : "https://github.com/feast107/Linq-js.git"
+		"url" : "https://github.com/feast107/linqes.git"
 	},
-	"homepage" : "https://github.com/feast107/Linq-js",
+	"homepage" : "https://github.com/feast107/linqes",
 	"license" : "MIT",
 	"keywords" : [
 		"linq",

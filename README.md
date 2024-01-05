@@ -1,5 +1,6 @@
-# eslinq
- Linq extension in javascript
+# linqes
+
+ Linq extension in ES
 
 ## Example
 
