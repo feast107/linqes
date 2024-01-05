@@ -2,42 +2,62 @@
 {
 	(function (type)
 	{
+		type.aggregate ??= function (seed, accumulate)
+		{
+			for (const item of this) seed = accumulate(seed, item)
+			return seed;
+		}
+		type.all ??= function (match)
+		{
+			for (const item of this) if (!match(item)) return false;
+			return true;
+		}
 		type.any ??= function (match)
 		{
 			return this.firstOrDefault(match) !== null;
 		}
-		type.all ??= function (match)
+		type.append ??= function* (item)
 		{
-			let item = this.next();
-			while (!item.done)
-			{
-				if (!match(item.value)) return false;
-				item = this.next();
-			}
-			return true;
+			for (const item of this) yield item
+			yield item
 		}
 		type.count ??= function (match)
 		{
 			match ??= () => true;
 			let count = 0;
-			let item = this.next();
-			while (!item.done)
-			{
-				if (match(item.value)) count++;
-				item = this.next();
-			}
+			for (const item of this) if (match(item)) count++;
 			return count;
 		}
 		type.concat ??= function* (source)
 		{
+			for (const item of this) yield item
+			for (const item of source) yield item
+		}
+		type.distinct ??= function* (comparer)
+		{
+			comparer ??= Object.is;
+			const stack = []
 			for (const item of this)
 			{
-				yield item
+				if (stack.findIndex(x => comparer(x, item)) < 0)
+				{
+					stack.push(item)
+				}
 			}
-			for (const item of source)
+			for (const item of stack) yield item
+		}
+		type.distinctBy ??= function* (selector, comparer)
+		{
+			comparer ??= Object.is;
+			const stack = []
+			for (const item of this)
 			{
-				yield item
+				if (stack.findIndex(x => comparer(selector(x), selector(item))) < 0)
+				{
+					stack.push(item)
+				}
 			}
+			for (const item of stack) yield item
 		}
 		type.first ??= function (match)
 		{
@@ -48,29 +68,24 @@
 		type.firstOrDefault ??= function (match)
 		{
 			match ??= () => true;
-			let item = this.next();
-			while (!item.done)
+			for (const item of this)
 			{
-				if (match(item.value)) return item.value;
-				item = this.next();
+				if (match(item)) return item;
 			}
 		}
 		type.forEach ??= function (action)
 		{
-			let item = this.next();
-			while (!item.done)
+			for (const item of this)
 			{
-				action(item.value)
-				item = this.next();
+				action(item)
 			}
 		}
 		type.groupBy ??= function* (keySelector)
 		{
 			let map = new Map();
-			let item = this.next();
-			while (!item.done)
+			for (const item of this)
 			{
-				const key = keySelector(item.value);
+				const key = keySelector(item);
 				let cache = map.get(key);
 				if (cache === undefined)
 				{
@@ -78,8 +93,7 @@
 					cache.key = key;
 					map.set(key, cache)
 				}
-				cache.push(item.value)
-				item = this.next();
+				cache.push(item)
 			}
 			for (let value of map.values()) yield value
 		}
@@ -93,22 +107,18 @@
 		{
 			match ??= () => true;
 			let last = null;
-			let item = this.next();
-			while (!item.done)
+			for (const item of this)
 			{
-				if (match(item.value)) last = item.value;
-				item = this.next();
+				if (match(item)) last = item;
 			}
 			return last;
 		}
 		type.reverse ??= function* ()
 		{
 			const arr = []
-			let item = this.next();
-			while (!item.done)
+			for (const item of this)
 			{
-				arr.push(item.value)
-				item = this.next();
+				arr.push(item)
 			}
 			while (arr.length > 0)
 			{
@@ -117,44 +127,104 @@
 		}
 		type.select ??= function* (selector)
 		{
-			let item = this.next();
-			while (!item.done)
+			let index = 0
+			for (const item of this)
 			{
-				yield selector(item.value)
-				item = this.next();
+				yield selector(item, index++)
 			}
 		}
 		type.selectMany ??= function* (selector)
 		{
-			let item = this.next();
-			while (!item.done)
+			for (const item of this)
 			{
-				for (let sub of selector(item.value))
+				for (let sub of selector(item))
 				{
 					yield sub
 				}
-				item = this.next();
+			}
+		}
+		type.take ??= function* (count)
+		{
+			const start = Number.isInteger(count) ? 0 : count[0]
+			const num = Number.isInteger(count) ? count : count[1] > 0 ? count[1] - start : count[1];
+			let begin = 0;
+			let accumulate = 0;
+			if (num > 0)
+			{
+				for (const item of this)
+				{
+					if (begin >= start)
+					{
+						if (accumulate < num)
+						{
+							yield item
+							accumulate++;
+						}
+						if (accumulate >= num) return
+					}
+					begin++;
+				}
+
+				throw 'Not satisfied'
+
+			}
+			else
+			{
+				let queue = []
+				for (const item of this)
+				{
+					if (begin >= start)
+					{
+						queue.push(item)
+						if (queue.length >= -num)
+						{
+							yield queue.shift()
+						}
+					}
+					begin++;
+				}
+			}
+		}
+		type.takeLast ??= function* (count)
+		{
+			const stack = []
+			for (const item of this)
+			{
+				stack.push(item)
+				if (stack.length > count)
+				{
+					stack.shift()
+				}
+			}
+			for (const item of stack)
+			{
+				yield item
+			}
+		}
+		type.takeWhile ??= function* (match)
+		{
+			let index = 0;
+			for (const item of this)
+			{
+				if (!match(item, index)) return;
+				yield item
+				index++;
 			}
 		}
 		type.toArray ??= function ()
 		{
 			const ret = [];
-			let item = this.next();
-			while (!item.done)
+			for (const item of this)
 			{
-				ret.push(item.value)
-				item = this.next();
+				ret.push(item)
 			}
 			return ret
 		}
 		type.where ??= function* (match)
 		{
-			let item = this.next();
-			while (!item.done)
+			for (const item of this)
 			{
-				const value = item.value;
-				if (match(value)) yield value
-				item = this.next();
+				if (match(item)) yield item
 			}
 		}
 	})((function* ()
@@ -235,6 +305,10 @@
 			}
 			return false;
 		};
+		type.asEnumerable ??= function* ()
+		{
+			for (const item of this) yield item;
+		}
 		type.clear ??= function ()
 		{
 			while (this.length > 0)
@@ -269,11 +343,15 @@
 		}
 		type.first ??= function (match)
 		{
-			return this.select(x => x).first(match)
+			return this.asEnumerable().first(match)
 		}
 		type.firstOrDefault ??= function (match)
 		{
-			return this.select(x => x).firstOrDefault(match)
+			return this.asEnumerable().firstOrDefault(match)
+		}
+		type.getRange ??= function (start, count)
+		{
+			return this.slice(start, count + start)
 		}
 		type.groupBy ??= function* (keySelector)
 		{
@@ -301,11 +379,11 @@
 		};
 		type.last ??= function (match)
 		{
-			return this.select(x => x).last(match)
+			return this.asEnumerable().last(match)
 		}
 		type.lastOrDefault ??= function (match)
 		{
-			return this.select(x => x).lastOrDefault(match)
+			return this.asEnumerable().lastOrDefault(match)
 		}
 		type.remove ??= function (item)
 		{
