@@ -1,6 +1,23 @@
-# linqes
+<div align="center">
 
- Linq extension in ES
+<h1>
+
+linqes
+
+</h1>
+
+[LINQ](https://learn.microsoft.com/en-us/dotnet/csharp/linq/) in ES
+
+</div>
+
+<p align="center">
+    <img alt="dotnet-version" src="https://img.shields.io/badge/JavaScript-All-EEEE00.svg"/>
+<img alt="dotnet-version" src="https://img.shields.io/badge/TypeScript-Declare-blue.svg"/>
+    <img alt="npm" src="https://img.shields.io/badge/npm-v1.0.0-FF3300.svg"/>
+	<img alt="license" src="https://img.shields.io/badge/license-MIT-FF00FF.svg"/>
+</p>
+
+---
 
 ## Example
 
@@ -16,10 +33,12 @@
     //...
     .toArray()
 ```
+
 ## IEnumerable
 
 ```ts
-declare interface IEnumerable<T> {
+declare interface IEnumerable<T> 
+{
 	/**
 	 * Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
 	 * @param seed The initial accumulator value.
