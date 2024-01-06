@@ -24,6 +24,11 @@ linqes
 ```shell
 npm i linqes
 ```
+or load through html
+
+```html
+<script type="text/javascript" src="https://github.com/feast107/linqes/blob/master/index.min.js" />
+```
 
 ## Example
 
