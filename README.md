@@ -21,7 +21,7 @@ linqes
 
 ## Installation
 
-```$
+```shell
 npm i linqes
 ```
 
