@@ -12,9 +12,9 @@ linqes
 
 <p align="center">
     <img alt="dotnet-version" src="https://img.shields.io/badge/JavaScript-All-EEEE00.svg"/>
-<img alt="dotnet-version" src="https://img.shields.io/badge/TypeScript-Declare-blue.svg"/>
+    <img alt="dotnet-version" src="https://img.shields.io/badge/TypeScript-Declare-blue.svg"/>
     <img alt="npm" src="https://img.shields.io/badge/npm-v1.0.0-FF3300.svg"/>
- <img alt="license" src="https://img.shields.io/badge/license-MIT-FF00FF.svg"/>
+    <img alt="license" src="https://img.shields.io/badge/license-MIT-FF00FF.svg"/>
 </p>
 
 ---
@@ -28,6 +28,8 @@ npm i linqes
 ## Example
 
 ```ts
+import 'linqes'
+
 [1,2,3,4,...[]]
     .asEnumerable()
     .where((x:number) => x >= 2)
