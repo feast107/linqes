@@ -564,7 +564,7 @@
 		}
 
 		contains(value : T) : boolean;
-		contains(value : T, comparer? : (left : T, right : T) => boolean) : boolean;
+		contains(value : T, comparer : (left : T, right : T) => boolean) : boolean;
 		contains(value : T, comparer? : (left : T, right : T) => boolean) : boolean {
 			comparer ??= Object.is;
 			for (const item of this) if (comparer(value, item)) return true;
@@ -1155,7 +1155,6 @@
 	ownPropertiesOf(PartialMap.prototype).forEach(name => {
 		defineProperty(Map.prototype, name, PartialMap.prototype[name])
 	})
-
 	ownPropertiesOf(PartialArray.prototype).forEach(name => {
 		defineProperty(Array.prototype, name, PartialArray.prototype[name])
 	})
