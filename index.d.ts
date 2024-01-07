@@ -1,4 +1,4 @@
-declare type IEnumerable<T> = Generator<T> & {
+declare interface IEnumerable<T> {
 
 	/**
 	 * Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
@@ -486,12 +486,20 @@ declare type IEnumerable<T> = Generator<T> & {
 /**
  * All iterable types can be IEnumerable
  */
-declare interface RelativeIndexable<T> extends IEnumerable<T>{}
+declare interface RelativeIndexable<T> extends IEnumerable<T> {
+}
+
+/**
+ * Base declaration
+ */
+declare interface ReadonlyArray<T> {
+	concat(items : Array<T>) : Array<T>
+}
 
 /**
  * Extended array methods
  */
-declare interface Array<T>{
+declare interface Array<T> {
 
 	/**
 	 * Adds the given object to the end of this list. The size of the list is
@@ -513,6 +521,12 @@ declare interface Array<T>{
 	 * Clears the contents of List.
 	 */
 	clear() : void
+
+	/**
+	 * Base concat mathod
+	 * @param items items to be concat
+	 */
+	concat(items : Array<T>) : Array<T>
 
 	/**
 	 * Determines whether the array contains elements that match the conditions defined by the specified predicate.
