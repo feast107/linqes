@@ -37,8 +37,8 @@ import 'linqes'
 
 [1,2,3,4,...[]]
     .asEnumerable()
-    .where((x:number) => x >= 2)
-    .select((x:number) => [x,[x * 2,[x * 3]]])
+    .where(x => x >= 2)
+    .select(x => [x,[x * 2,[x * 3]]])
     .selectMany(x => x[1])
     .groupBy(x => x)
     .chunk(3)

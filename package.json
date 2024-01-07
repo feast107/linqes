@@ -16,10 +16,14 @@
 		"extension",
 		"fluent",
 		"list",
+		"array",
 		"enumerable",
 		"generator",
 		"iterator"
 	],
+	"dependencies" : {
+
+	},
 	"devDependencies" : {
 		"@types/node" : "^20.10.6"
 	}

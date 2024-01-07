@@ -1,4 +1,5 @@
 declare type IEnumerable<T> = Generator<T> & {
+
 	/**
 	 * Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
 	 * @param seed The initial accumulator value.
@@ -330,8 +331,14 @@ declare type IEnumerable<T> = Generator<T> & {
 	 * Projects each element of a sequence into a new form by incorporating the element's index.
 	 * @param selector A transform function to apply to each element.
 	 */
-	select<TReturn>(selector : ((item : T) => TReturn) | ((item : T, index : number) => TReturn))
-		: IEnumerable<TReturn>;
+	select<TReturn>(selector : (item : T) => TReturn) : IEnumerable<TReturn>;
+
+	/**
+	 * Projects each element of a sequence into a new form by incorporating the element's index.
+	 * @param selector A transform function to apply to each element. The second parameter of the function
+	 * represents the index of the source element.
+	 */
+	select<TReturn>(selector : (item : T, index : number) => TReturn) : IEnumerable<TReturn>;
 
 	/**
 	 * Projects each element of a sequence to an array and flattens the resulting sequences into one sequence.
@@ -424,7 +431,14 @@ declare type IEnumerable<T> = Generator<T> & {
 	 * Returns elements from a sequence as long as a specified condition is true.
 	 * @param predicate A function to test each element for a condition.
 	 */
-	takeWhile(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean)) : IEnumerable<T>;
+	takeWhile(predicate : (item : T) => boolean) : IEnumerable<T>;
+
+	/**
+	 * Returns elements from a sequence as long as a specified condition is true.
+	 * @param predicate A function to test each element for a condition. The second parameter of the function
+	 * represents the index of the source element.
+	 */
+	takeWhile(predicate : (item : T, index : number) => boolean) : IEnumerable<T>;
 
 	/**
 	 * Creates an array from an enumerable.
@@ -457,10 +471,16 @@ declare type IEnumerable<T> = Generator<T> & {
 
 	/**
 	 * Filters a sequence of values based on a predicate. Each element's index is used in the logic of the predicate function.
-	 * @param predicate A function to test each source element for a condition; the second parameter of the function
+	 * @param predicate A function to test each source element for a condition;
+	 */
+	where(predicate : (item : T) => boolean) : IEnumerable<T>;
+
+	/**
+	 * Filters a sequence of values based on a predicate. Each element's index is used in the logic of the predicate function.
+	 * @param predicate A function to test each source element for a condition; The second parameter of the function
 	 * represents the index of the source element.
 	 */
-	where(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean)) : IEnumerable<T>;
+	where(predicate : (item : T, index : number) => boolean) : IEnumerable<T>;
 }
 
 declare interface Array<T> extends IEnumerable<T> {
