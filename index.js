@@ -19,6 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+// noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
 (function () {
     class Enumerable {
         [Symbol.iterator]() {
@@ -46,7 +47,7 @@
             return true;
         }
         any(predicate) {
-            return this.firstOrDefault(predicate) !== null;
+            return this.firstOrDefault(predicate) != null;
         }
         *append(element) {
             for (const item of this)
@@ -453,7 +454,13 @@
             }
         }
     }
-    class PartialArray extends Enumerable {
+    class PartialArrayLike extends Enumerable {
+        *asEnumerable() {
+            for (const item of this)
+                yield item;
+        }
+    }
+    class PartialArray extends PartialArrayLike {
         add(item) {
             this.push(item);
         }
@@ -558,6 +565,14 @@
             throw new Error("Method not implemented.");
         }
     }
+    // noinspection JSUnresolvedReference
+    const Generator = (function* () {
+        // @ts-ignore
+    })().__proto__.__proto__;
+    const excepts = Object.getOwnPropertyNames(Generator);
+    function propertyNames(prototype) {
+        return Object.getOwnPropertyNames(prototype).filter(x => excepts.find(y => x == y) == null);
+    }
     function defineProperty(prototype, name, method) {
         if (prototype[name] != undefined)
             return;
@@ -566,17 +581,38 @@
             writable: false
         });
     }
-    Object.getOwnPropertyNames(PartialMap.prototype).forEach(name => {
+    const iterable = [
+        Map.prototype,
+        String.prototype,
+        Array.prototype,
+        Int8Array.prototype,
+        Uint8Array.prototype,
+        Uint8ClampedArray.prototype,
+        Int16Array.prototype,
+        Uint16Array.prototype,
+        Int32Array.prototype,
+        Uint32Array.prototype,
+        Float32Array.prototype,
+        Float64Array.prototype,
+        BigInt64Array.prototype,
+        BigUint64Array.prototype,
+    ];
+    propertyNames(PartialMap.prototype).forEach(name => {
         defineProperty(Map.prototype, name, PartialMap.prototype[name]);
     });
-    Object.getOwnPropertyNames(PartialArray.prototype).forEach(name => {
+    propertyNames(PartialArray.prototype).forEach(name => {
         defineProperty(Array.prototype, name, PartialArray.prototype[name]);
     });
-    Object.getOwnPropertyNames(Enumerable.prototype).forEach(name => {
-        defineProperty((function* () {
-            // @ts-ignore
-        })().__proto__.__proto__, name, Enumerable.prototype[name]);
-        defineProperty(Array.prototype, name, Enumerable.prototype[name]);
-        defineProperty(Map.prototype, name, Enumerable.prototype[name]);
+    propertyNames(PartialArrayLike.prototype).forEach(name => {
+        iterable.forEach(proto => {
+            defineProperty(proto, name, PartialArrayLike.prototype[name]);
+        });
+    });
+    propertyNames(Enumerable.prototype).forEach(name => {
+        const method = Enumerable.prototype[name];
+        defineProperty(Generator, name, method);
+        iterable.forEach(proto => {
+            defineProperty(proto, name, method);
+        });
     });
 })();

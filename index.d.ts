@@ -483,7 +483,15 @@ declare type IEnumerable<T> = Generator<T> & {
 	where(predicate : (item : T, index : number) => boolean) : IEnumerable<T>;
 }
 
-declare interface Array<T> extends IEnumerable<T> {
+/**
+ * All iterable types can be IEnumerable
+ */
+declare interface RelativeIndexable<T> extends IEnumerable<T>{}
+
+/**
+ * Extended array methods
+ */
+declare interface Array<T>{
 
 	/**
 	 * Adds the given object to the end of this list. The size of the list is
@@ -551,6 +559,9 @@ declare interface Array<T> extends IEnumerable<T> {
 	removeAt(index : number) : T | undefined
 }
 
+/**
+ * Extended map methods
+ */
 declare interface Map<K, V> extends IEnumerable<[K, V]> {
 
 	/**
