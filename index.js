@@ -1,7 +1,8 @@
+// noinspection JSUnusedGlobalSymbols
 (function () {
-    class EmptyGenerator {
+    class Enumerable {
         [Symbol.iterator]() {
-            return undefined;
+            return this;
         }
         next(...args) {
             return undefined;
@@ -12,8 +13,6 @@
         throw(e) {
             return undefined;
         }
-    }
-    class Enumerable extends EmptyGenerator {
         aggregate(seed, accumulator) {
             let tmp = seed;
             for (const item of this)
@@ -29,7 +28,6 @@
         any(predicate) {
             return this.firstOrDefault(predicate) !== null;
         }
-        // @ts-ignore
         *append(element) {
             for (const item of this)
                 yield item;
@@ -38,7 +36,6 @@
         asEnumerable() {
             return this;
         }
-        // @ts-ignore
         *chunk(size) {
             let chunk = new Array();
             for (const item of this) {
@@ -50,11 +47,9 @@
             }
             yield chunk;
         }
-        // @ts-ignore
         *concat(source) {
             for (const item of this)
                 yield item;
-            // @ts-ignore
             for (const item of source)
                 yield item;
         }
@@ -73,7 +68,6 @@
                     count++;
             return count;
         }
-        //@ts-ignore
         *distinct(comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
             const stack = [];
@@ -85,7 +79,6 @@
             for (const item of stack)
                 yield item;
         }
-        //@ts-ignore
         *distinctBy(keySelector, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
             const stack = [];
@@ -111,7 +104,6 @@
             }
             return null;
         }
-        //@ts-ignore
         *except(source, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
             const compares = [];
@@ -125,7 +117,6 @@
                 }
             }
         }
-        //@ts-ignore
         *exceptBy(source, keySelector, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
             const compares = [];
@@ -156,21 +147,26 @@
                     return item;
             return defaultValue;
         }
-        //@ts-ignore
-        *groupBy(keySelector) {
-            let map = new Map();
+        *groupBy(keySelector, elementSelector, comparer) {
+            comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
+            elementSelector !== null && elementSelector !== void 0 ? elementSelector : (elementSelector = (x) => x);
+            if (elementSelector.length == 2) {
+                comparer = elementSelector;
+                elementSelector = (x) => x;
+            }
+            const groups = [];
             for (const item of this) {
                 const key = keySelector(item);
-                let cache = map.get(key);
-                if (cache === undefined) {
+                let cache = groups.find(x => comparer(x.key, key));
+                if (!cache) {
                     cache = [];
                     cache.key = key;
-                    map.set(key, cache);
+                    groups.push(cache);
                 }
-                cache.push(item);
+                cache.push(elementSelector(item));
             }
-            for (let value of map.values())
-                yield value;
+            for (const group of groups)
+                yield group;
         }
         last(predicate) {
             const ret = this.lastOrDefault(predicate);
@@ -191,7 +187,6 @@
             }
             return last;
         }
-        // @ts-ignore
         *order(comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = (left, right) => left - right);
             const stack = [];
@@ -205,7 +200,6 @@
                 }
             }
         }
-        // @ts-ignore
         *orderBy(keySelector, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = (left, right) => left - right);
             const stack = [];
@@ -221,7 +215,6 @@
             for (const item of stack)
                 yield item;
         }
-        // @ts-ignore
         *orderByDescending(keySelector, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = (left, right) => left - right);
             const stack = [];
@@ -237,7 +230,6 @@
             for (const item of stack)
                 yield item;
         }
-        // @ts-ignore
         *orderDescending(comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = (left, right) => left - right);
             const stack = [];
@@ -253,13 +245,11 @@
             for (const item of stack)
                 yield item;
         }
-        // @ts-ignore
         *prepend(element) {
             yield element;
             for (const item of this)
                 yield item;
         }
-        // @ts-ignore
         *reverse() {
             const arr = [];
             for (const item of this) {
@@ -269,14 +259,12 @@
                 yield arr.pop();
             }
         }
-        // @ts-ignore
         *select(selector) {
             let index = 0;
             for (const item of this) {
                 yield selector(item, index++);
             }
         }
-        // @ts-ignore
         *selectMany(selector) {
             for (const item of this) {
                 for (let sub of selector(item)) {
@@ -306,7 +294,6 @@
             }
             return single;
         }
-        // @ts-ignore
         *skip(count) {
             for (const item of this) {
                 count--;
@@ -315,7 +302,6 @@
                 }
             }
         }
-        // @ts-ignore
         *skipLast(count) {
             const stack = [];
             for (const item of this) {
@@ -325,7 +311,6 @@
                 }
             }
         }
-        // @ts-ignore
         *skipWhile(predicate) {
             let start = false;
             for (const item of this) {
@@ -335,7 +320,6 @@
                     start = true;
             }
         }
-        // @ts-ignore
         *take(count) {
             const start = Number.isInteger(count) ? 0 : count[0];
             const num = Number.isInteger(count) ? count : count[1] > 0 ? count[1] - start : count[1];
@@ -368,7 +352,6 @@
                 }
             }
         }
-        // @ts-ignore
         *takeLast(count) {
             const stack = [];
             for (const item of this) {
@@ -381,7 +364,6 @@
                 yield item;
             }
         }
-        // @ts-ignore
         *takeWhile(predicate) {
             let index = 0;
             for (const item of this) {
@@ -409,7 +391,6 @@
             }
             return map;
         }
-        // @ts-ignore
         *union(source, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
             const union = [];
@@ -427,7 +408,6 @@
                 yield item;
             }
         }
-        // @ts-ignore
         *unionBy(source, keySelector, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
             const union = [];
@@ -445,7 +425,6 @@
                 yield item;
             }
         }
-        // @ts-ignore
         *where(predicate) {
             let count = 0;
             for (const item of this) {
@@ -463,7 +442,6 @@
                 this.push(item);
             }
         }
-        // @ts-ignore
         *asEnumerable() {
             for (const item of this)
                 yield item;
@@ -560,12 +538,6 @@
             throw new Error("Method not implemented.");
         }
     }
-    function ownPropertiesOf(prototype) {
-        return Object.getOwnPropertyNames(prototype).filter(x => {
-            return Object.getOwnPropertyNames(class {
-            }.prototype).findIndex(y => x == y) < 0;
-        });
-    }
     function defineProperty(prototype, name, method) {
         if (prototype[name] != undefined)
             return;
@@ -574,13 +546,13 @@
             writable: false
         });
     }
-    ownPropertiesOf(PartialMap.prototype).forEach(name => {
+    Object.getOwnPropertyNames(PartialMap.prototype).forEach(name => {
         defineProperty(Map.prototype, name, PartialMap.prototype[name]);
     });
-    ownPropertiesOf(PartialArray.prototype).forEach(name => {
+    Object.getOwnPropertyNames(PartialArray.prototype).forEach(name => {
         defineProperty(Array.prototype, name, PartialArray.prototype[name]);
     });
-    ownPropertiesOf(Enumerable.prototype).forEach(name => {
+    Object.getOwnPropertyNames(Enumerable.prototype).forEach(name => {
         defineProperty((function* () {
             // @ts-ignore
         })().__proto__.__proto__, name, Enumerable.prototype[name]);

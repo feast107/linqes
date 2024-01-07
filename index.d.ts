@@ -1,10 +1,12 @@
-declare interface IEnumerable<T> {
+declare type IEnumerable<T> = Generator<T> & {
 	/**
 	 * Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
 	 * @param seed The initial accumulator value.
 	 * @param accumulator An accumulator function to be invoked on each element.
 	 */
-	aggregate<TSeed, TReturn>(seed : TSeed, accumulator : (seed : TSeed, item : T) => TReturn) : TReturn;
+	aggregate<TSeed, TReturn>(
+		seed : TSeed,
+		accumulator : (seed : TSeed, item : T) => TReturn) : TReturn;
 
 	/**
 	 * Determines whether all elements of a sequence satisfy a condition.
@@ -57,7 +59,9 @@ declare interface IEnumerable<T> {
 	 * @param value The value to locate in the sequence.
 	 * @param comparer An equality comparer to compare values.
 	 */
-	contains(value : T, comparer? : (left : T, right : T) => boolean) : boolean;
+	contains(
+		value : T,
+		comparer? : (left : T, right : T) => boolean) : boolean;
 
 	/**
 	 * Returns the number of elements in a sequence.
@@ -93,7 +97,9 @@ declare interface IEnumerable<T> {
 	 * @param keySelector A function to extract the key for each element.
 	 * @param comparer An comparer to compare keys.
 	 */
-	distinctBy<TKey>(keySelector : (item : T) => TKey, comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
+	distinctBy<TKey>(
+		keySelector : (item : T) => TKey,
+		comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
 
 	/**
 	 * Returns the element at a specified index in a sequence.
@@ -120,7 +126,9 @@ declare interface IEnumerable<T> {
 	 * removed from the returned sequence.
 	 * @param comparer An comparer to compare values.
 	 */
-	except(source : Array<T> | IEnumerable<T>, comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
+	except(
+		source : Array<T> | IEnumerable<T>,
+		comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
 
 	/**
 	 * Produces the set difference of two sequences according to a specified key selector function.
@@ -128,7 +136,9 @@ declare interface IEnumerable<T> {
 	 * from the returned sequence.
 	 * @param keySelector A function to extract the key for each element.
 	 */
-	exceptBy<TKey>(source : Array<T> | IEnumerable<T>, keySelector : (item : T) => TKey) : IEnumerable<T>;
+	exceptBy<TKey>(
+		source : Array<T> | IEnumerable<T>,
+		keySelector : (item : T) => TKey) : IEnumerable<T>;
 
 	/**
 	 * Produces the set difference of two sequences according to a specified key selector function.
@@ -137,7 +147,10 @@ declare interface IEnumerable<T> {
 	 * @param keySelector A function to extract the key for each element.
 	 * @param comparer The comparer to compare values.
 	 */
-	exceptBy<TKey>(source : Array<T> | IEnumerable<T>, keySelector : (item : T) => TKey, comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
+	exceptBy<TKey>(
+		source : Array<T> | IEnumerable<T>,
+		keySelector : (item : T) => TKey,
+		comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
 
 	/**
 	 * Returns the first element of a sequence.
@@ -172,13 +185,46 @@ declare interface IEnumerable<T> {
 	 * @param predicate A function to test each element for a condition.
 	 * @param defaultValue The default value to return if the sequence is empty.
 	 */
-	firstOrDefault(predicate : (item : T) => boolean, defaultValue : T) : T | null;
+	firstOrDefault(
+		predicate : (item : T) => boolean,
+		defaultValue : T) : T | null;
 
 	/**
 	 * Groups the elements of a sequence according to a specified key selector function.
 	 * @param keySelector A function to extract the key for each element.
 	 */
 	groupBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<Array<T> & { key : TKey }>;
+
+	/**
+	 * Groups the elements of a sequence according to a specified key selector function and compares the keys by using a specified comparer.
+	 * @param keySelector A function to extract the key for each element.
+	 * @param comparer An comparer to compare keys.
+	 */
+	groupBy<TKey>(
+		keySelector : (item : T) => TKey,
+		comparer : (left : TKey, right : TKey) => boolean) : IEnumerable<Array<T> & { key : TKey }>;
+
+	/**
+	 * Groups the elements of a sequence according to a specified key selector function and projects the elements for
+	 * each group by using a specified function.
+	 * @param keySelector A function to extract the key for each element.
+	 * @param elementSelector A function to map each source element to an element in the source.
+	 */
+	groupBy<TKey, TElement>(
+		keySelector : (item : T) => TKey,
+		elementSelector : (item : T) => TElement) : IEnumerable<Array<TElement> & { key : TKey }>;
+
+	/**
+	 * Groups the elements of a sequence according to a key selector function. The keys are compared by using a comparer
+	 * and each group's elements are projected by using a specified function.
+	 * @param keySelector A function to extract the key for each element.
+	 * @param elementSelector A function to map each source element to an element in the source.
+	 * @param comparer An comparer to compare keys.
+	 */
+	groupBy<TKey, TElement>(
+		keySelector : (item : T) => TKey,
+		elementSelector : (item : T) => TElement,
+		comparer : (left : TKey, right : TKey) => boolean) : IEnumerable<Array<TElement> & { key : TKey }>;
 
 	/**
 	 * Returns the last element of a sequence.
@@ -213,7 +259,9 @@ declare interface IEnumerable<T> {
 	 * @param predicate A function to test each element for a condition.
 	 * @param defaultValue The default value to return if the sequence is empty.
 	 */
-	lastOrDefault(predicate : (item : T) => boolean, defaultValue : T) : T | null;
+	lastOrDefault(
+		predicate : (item : T) => boolean,
+		defaultValue : T) : T | null;
 
 	/**
 	 * Sorts the elements of a sequence in ascending order.
@@ -237,7 +285,9 @@ declare interface IEnumerable<T> {
 	 * @param keySelector A function to extract a key from an element.
 	 * @param comparer An comparer to compare keys.
 	 */
-	orderBy<TKey>(keySelector : (item : T) => TKey, comparer : (current : TKey, exist : TKey) => number) : IEnumerable<T>;
+	orderBy<TKey>(
+		keySelector : (item : T) => TKey,
+		comparer : (current : TKey, exist : TKey) => number) : IEnumerable<T>;
 
 	/**
 	 * Sorts the elements of a sequence in descending order.
@@ -261,7 +311,9 @@ declare interface IEnumerable<T> {
 	 * @param keySelector A function to extract a key from an element.
 	 * @param comparer An comparer to compare keys.
 	 */
-	orderByDescending<TKey>(keySelector : (item : T) => TKey, comparer : (current : TKey, exist : TKey) => number) : IEnumerable<T>;
+	orderByDescending<TKey>(
+		keySelector : (item : T) => TKey,
+		comparer : (current : TKey, exist : TKey) => number) : IEnumerable<T>;
 
 	/**
 	 * Adds a value to the beginning of the sequence.
@@ -278,7 +330,8 @@ declare interface IEnumerable<T> {
 	 * Projects each element of a sequence into a new form by incorporating the element's index.
 	 * @param selector A transform function to apply to each element.
 	 */
-	select<TReturn>(selector : ((item : T) => TReturn) | ((item : T, index : number) => TReturn)) : IEnumerable<TReturn>;
+	select<TReturn>(selector : ((item : T) => TReturn) | ((item : T, index : number) => TReturn))
+		: IEnumerable<TReturn>;
 
 	/**
 	 * Projects each element of a sequence to an array and flattens the resulting sequences into one sequence.
@@ -325,7 +378,9 @@ declare interface IEnumerable<T> {
 	 * @param predicate A function to test an element for a condition.
 	 * @param defaultValue The default value to return if the sequence is empty.
 	 */
-	singleOrDefault(predicate : (item : T) => boolean, defaultValue : T) : T | null;
+	singleOrDefault(
+		predicate : (item : T) => boolean,
+		defaultValue : T) : T | null;
 
 	/**
 	 * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
@@ -396,7 +451,9 @@ declare interface IEnumerable<T> {
 	 * @param keySelector A function to extract the key for each element.
 	 * @param comparer The comparer to compare values.
 	 */
-	unionBy<TKey>(source : Array<T>, keySelector : (item : T) => TKey, comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
+	unionBy<TKey>(
+		source : Array<T>, keySelector : (item : T) => TKey,
+		comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
 
 	/**
 	 * Filters a sequence of values based on a predicate. Each element's index is used in the logic of the predicate function.
@@ -476,11 +533,30 @@ declare interface Array<T> extends IEnumerable<T> {
 
 declare interface Map<K, V> extends IEnumerable<[K, V]> {
 
+	/**
+	 * Determines whether the Dictionary<TKey,TValue> contains the specified key.
+	 * @param key The key to locate in the Map<K,V>.
+	 */
 	containsKey(key : K) : boolean;
 
+	/**
+	 * Determines whether the Dictionary<TKey,TValue> contains a specific value.
+	 * @param value The value to locate in the Map<K,V>.
+	 */
 	containsValue(value : V) : boolean;
 
+	/**
+	 * Attempts to add the specified key and value to the dictionary.
+	 * @param key The key of the element to add.
+	 * @param value The value of the element to add. It can be null.
+	 */
 	tryAdd(key : K, value : V) : boolean;
 
+	/**
+	 * Gets the value associated with the specified key.
+	 * @param key The key of the value to get.
+	 * @param valueGetter When this method returns, contains the value associated with the specified key, if the key is found;
+	 * otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.
+	 */
 	tryGetValue(key : K, valueGetter : (value : V) => void) : boolean;
 }

@@ -1,17 +1,17 @@
 {
-	"name": "linqes",
-	"version": "1.0.1",
-	"description": "linq in es, automated extensions on prototype",
-	"main": "index.js",
-	"types": "index.d.ts",
-	"author": "Feast",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/feast107/linqes.git"
+	"name" : "linqes",
+	"version" : "1.0.1",
+	"description" : "linq in es, automated extensions on prototype",
+	"main" : "index.js",
+	"types" : "index.d.ts",
+	"author" : "Feast",
+	"repository" : {
+		"type" : "git",
+		"url" : "https://github.com/feast107/linqes.git"
 	},
-	"homepage": "https://github.com/feast107/linqes",
-	"license": "MIT",
-	"keywords": [
+	"homepage" : "https://github.com/feast107/linqes",
+	"license" : "MIT",
+	"keywords" : [
 		"linq",
 		"extension",
 		"fluent",
@@ -20,4 +20,7 @@
 		"generator",
 		"iterator"
 	],
+	"devDependencies" : {
+		"@types/node" : "^20.10.6"
+	}
 }

@@ -1,420 +1,473 @@
+// noinspection JSUnusedGlobalSymbols
+
+declare interface Generator<T> {
+	/**
+	 * Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
+	 * @param seed The initial accumulator value.
+	 * @param accumulator An accumulator function to be invoked on each element.
+	 */
+	aggregate<TSeed, TReturn>(
+		seed : TSeed,
+		accumulator : (seed : TSeed, item : T) => TReturn) : TReturn;
+
+	/**
+	 * Determines whether all elements of a sequence satisfy a condition.
+	 * @param predicate
+	 */
+	all(predicate : (item : T) => boolean) : boolean;
+
+	/**
+	 * Determines whether a sequence contains any elements.
+	 */
+	any() : boolean;
+
+	/**
+	 * Determines whether any element of a sequence satisfies a condition.
+	 * @param predicate A function to test each element for a condition.
+	 */
+	any(predicate : (item : T) => boolean) : boolean;
+
+	/**
+	 * Appends a value to the end of the sequence.
+	 * @param element The value to append to
+	 */
+	append(element : T) : IEnumerable<T>;
+
+	/**
+	 * Returns the input typed as enumerable.
+	 */
+	asEnumerable() : IEnumerable<T>;
+
+	/**
+	 * Splits the elements of a sequence into chunks of size at most
+	 * @param size The maximum size of each chunk.
+	 */
+	chunk(size : number) : IEnumerable<Array<T>>;
+
+	/**
+	 * Concatenates two sequences.
+	 * @param source The sequence to concatenate to the current.
+	 */
+	concat(source : IEnumerable<T>) : IEnumerable<T>;
+
+	/**
+	 * Determines whether a sequence contains a specified element by using the default equality comparer.
+	 * @param value The value to locate in the sequence.
+	 */
+	contains(value : T) : boolean;
+
+	/**
+	 * Determines whether a sequence contains a specified element by using a specified comparer.
+	 * @param value The value to locate in the sequence.
+	 * @param comparer An equality comparer to compare values.
+	 */
+	contains(
+		value : T,
+		comparer? : (left : T, right : T) => boolean) : boolean;
+
+	/**
+	 * Returns the number of elements in a sequence.
+	 */
+	count() : number;
+
+	/**
+	 * Returns a number that represents how many elements in the specified sequence satisfy a condition.
+	 * @param predicate A function to test each element for a condition.
+	 */
+	count(predicate : (item : T) => boolean) : number;
+
+	/**
+	 * Returns distinct elements from a sequence by using the default equality comparer to compare values.
+	 */
+	distinct() : IEnumerable<T>;
+
+	/**
+	 * Returns distinct elements from a sequence by using a specified comparer to compare values.
+	 * @param comparer An comparer to compare values.
+	 */
+	distinct(comparer : (left : T, right : T) => boolean) : IEnumerable<T>;
+
+	/**
+	 * Returns distinct elements from a sequence according to a specified key selector function.
+	 * @param keySelector A function to extract the key for each element.
+	 */
+	distinctBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<T>;
+
+	/**
+	 * Returns distinct elements from a sequence according to a specified key selector function and using a specified
+	 * comparer to compare keys.
+	 * @param keySelector A function to extract the key for each element.
+	 * @param comparer An comparer to compare keys.
+	 */
+	distinctBy<TKey>(
+		keySelector : (item : T) => TKey,
+		comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
+
+	/**
+	 * Returns the element at a specified index in a sequence.
+	 * @param index The zero-based index of the element to retrieve.
+	 */
+	elementAt(index : number) : T;
+
+	/**
+	 * Returns the element at a specified index in a sequence.
+	 * @param index The index of the element to retrieve, which is either from the beginning or the end of the sequence.
+	 */
+	elementAtOrDefault(index : number) : T | null;
+
+	/**
+	 * Produces the set difference of two sequences by using the default equality comparer to compare values.
+	 * @param source An array whose elements that also occur in the first sequence will cause those elements to be
+	 * removed from the returned sequence.
+	 */
+	except(source : Array<T> | IEnumerable<T>) : IEnumerable<T>;
+
+	/**
+	 * Produces the set difference of two sequences by using the specified comparer to compare values.
+	 * @param source An array whose elements that also occur in the first sequence will cause those elements to be
+	 * removed from the returned sequence.
+	 * @param comparer An comparer to compare values.
+	 */
+	except(
+		source : Array<T> | IEnumerable<T>,
+		comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
+
+	/**
+	 * Produces the set difference of two sequences according to a specified key selector function.
+	 * @param source An source whose keys that also occur in the first sequence will cause those elements to be removed
+	 * from the returned sequence.
+	 * @param keySelector A function to extract the key for each element.
+	 */
+	exceptBy<TKey>(
+		source : Array<T> | IEnumerable<T>,
+		keySelector : (item : T) => TKey) : IEnumerable<T>;
+
+	/**
+	 * Produces the set difference of two sequences according to a specified key selector function.
+	 * @param source An source whose keys that also occur in the first sequence will cause those elements to be removed
+	 * from the returned sequence.
+	 * @param keySelector A function to extract the key for each element.
+	 * @param comparer The comparer to compare values.
+	 */
+	exceptBy<TKey>(
+		source : Array<T> | IEnumerable<T>,
+		keySelector : (item : T) => TKey,
+		comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
+
+	/**
+	 * Returns the first element of a sequence.
+	 */
+	first() : T;
+
+	/**
+	 * Returns the first element in a sequence that satisfies a specified condition.
+	 * @param predicate A function to test each element for a condition.
+	 */
+	first(predicate : (item : T) => boolean) : T;
+
+	/**
+	 * Returns the first element of a sequence, or a default value if the sequence contains no elements.
+	 */
+	firstOrDefault() : T | null;
+
+	/**
+	 * Returns the first element of a sequence, or a specified default value if the sequence contains no elements.
+	 * @param defaultValue The default value to return if the sequence is empty.
+	 */
+	firstOrDefault(defaultValue : T) : T | null;
+
+	/**
+	 * Returns the first element of a sequence, or a default value if the sequence contains no elements.
+	 * @param predicate A function to test each element for a condition.
+	 */
+	firstOrDefault(predicate : (item : T) => boolean) : T | null;
+
+	/**
+	 * Returns the first element of the sequence that satisfies a condition, or a specified default value if no such element is found.
+	 * @param predicate A function to test each element for a condition.
+	 * @param defaultValue The default value to return if the sequence is empty.
+	 */
+	firstOrDefault(
+		predicate : (item : T) => boolean,
+		defaultValue : T) : T | null;
+
+	/**
+	 * Groups the elements of a sequence according to a specified key selector function.
+	 * @param keySelector A function to extract the key for each element.
+	 */
+	groupBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<Array<T> & { key : TKey }>;
+
+	/**
+	 * Groups the elements of a sequence according to a specified key selector function and compares the keys by using a specified comparer.
+	 * @param keySelector A function to extract the key for each element.
+	 * @param comparer An comparer to compare keys.
+	 */
+	groupBy<TKey>(
+		keySelector : (item : T) => TKey,
+		comparer : (left : TKey, right : TKey) => boolean) : IEnumerable<Array<T> & { key : TKey }>;
+
+	/**
+	 * Groups the elements of a sequence according to a specified key selector function and projects the elements for
+	 * each group by using a specified function.
+	 * @param keySelector A function to extract the key for each element.
+	 * @param elementSelector A function to map each source element to an element in the source.
+	 */
+	groupBy<TKey, TElement>(
+		keySelector : (item : T) => TKey,
+		elementSelector : (item : T) => TElement) : IEnumerable<Array<TElement> & { key : TKey }>;
+
+	/**
+	 * Groups the elements of a sequence according to a key selector function. The keys are compared by using a comparer
+	 * and each group's elements are projected by using a specified function.
+	 * @param keySelector A function to extract the key for each element.
+	 * @param elementSelector A function to map each source element to an element in the source.
+	 * @param comparer An comparer to compare keys.
+	 */
+	groupBy<TKey, TElement>(
+		keySelector : (item : T) => TKey,
+		elementSelector : (item : T) => TElement,
+		comparer : (left : TKey, right : TKey) => boolean) : IEnumerable<Array<TElement> & { key : TKey }>;
+
+	/**
+	 * Returns the last element of a sequence.
+	 */
+	last() : T;
+
+	/**
+	 * Returns the last element of a sequence that satisfies a specified condition.
+	 * @param predicate A function to test each element for a condition.
+	 */
+	last(predicate : (item : T) => boolean) : T;
+
+	/**
+	 * Returns the last element of a sequence, or a default value if the sequence contains no elements.
+	 */
+	lastOrDefault() : T | null;
+
+	/**
+	 * Returns the last element of a sequence, or a specified default value if the sequence contains no elements.
+	 * @param defaultValue The default value to return if the sequence is empty.
+	 */
+	lastOrDefault(defaultValue : T) : T | null;
+
+	/**
+	 * Returns the last element of a sequence that satisfies a condition or a default value if no such element is found.
+	 * @param predicate A function to test each element for a condition.
+	 */
+	lastOrDefault(predicate : (item : T) => boolean) : T | null;
+
+	/**
+	 * Returns the last element of a sequence that satisfies a condition, or a specified default value if no such element is found.
+	 * @param predicate A function to test each element for a condition.
+	 * @param defaultValue The default value to return if the sequence is empty.
+	 */
+	lastOrDefault(
+		predicate : (item : T) => boolean,
+		defaultValue : T) : T | null;
+
+	/**
+	 * Sorts the elements of a sequence in ascending order.
+	 */
+	order() : IEnumerable<T>;
+
+	/**
+	 * Sorts the elements of a sequence in ascending order.
+	 * @param comparer An comparer to compare keys.
+	 */
+	order(comparer : (current : T, exist : T) => number) : IEnumerable<T>;
+
+	/**
+	 * Sorts the elements of a sequence in ascending order according to a key.
+	 * @param keySelector A function to extract a key from an element.
+	 */
+	orderBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<T>;
+
+	/**
+	 * Sorts the elements of a sequence in ascending order according to a key.
+	 * @param keySelector A function to extract a key from an element.
+	 * @param comparer An comparer to compare keys.
+	 */
+	orderBy<TKey>(
+		keySelector : (item : T) => TKey,
+		comparer : (current : TKey, exist : TKey) => number) : IEnumerable<T>;
+
+	/**
+	 * Sorts the elements of a sequence in descending order.
+	 */
+	orderDescending() : IEnumerable<T>;
+
+	/**
+	 * Sorts the elements of a sequence in descending order.
+	 * @param comparer An comparer to compare keys.
+	 */
+	orderDescending(comparer : (current : T, exist : T) => number) : IEnumerable<T>;
+
+	/**
+	 * Sorts the elements of a sequence in descending order according to a key.
+	 * @param keySelector A function to extract a key from an element.
+	 */
+	orderByDescending<TKey>(keySelector : (item : T) => TKey) : IEnumerable<T>;
+
+	/**
+	 * Sorts the elements of a sequence in descending order according to a key.
+	 * @param keySelector A function to extract a key from an element.
+	 * @param comparer An comparer to compare keys.
+	 */
+	orderByDescending<TKey>(
+		keySelector : (item : T) => TKey,
+		comparer : (current : TKey, exist : TKey) => number) : IEnumerable<T>;
+
+	/**
+	 * Adds a value to the beginning of the sequence.
+	 * @param element The value to prepend to
+	 */
+	prepend(element : T) : IEnumerable<T>;
+
+	/**
+	 * Inverts the order of the elements in a sequence.
+	 */
+	reverse() : IEnumerable<T>;
+
+	/**
+	 * Projects each element of a sequence into a new form by incorporating the element's index.
+	 * @param selector A transform function to apply to each element.
+	 */
+	select<TReturn>(selector : ((item : T) => TReturn) | ((item : T, index : number) => TReturn))
+		: IEnumerable<TReturn>;
+
+	/**
+	 * Projects each element of a sequence to an array and flattens the resulting sequences into one sequence.
+	 * @param selector A transform function to apply to each element.
+	 */
+	selectMany<TReturn>(selector : (item : T) => IEnumerable<TReturn>) : IEnumerable<TReturn>;
+
+	/**
+	 * Returns the only element of a sequence that satisfies a specified condition, and throws an exception if more than
+	 * one such element exists.
+	 */
+	single() : T;
+
+	/**
+	 * Returns the only element of a sequence that satisfies a specified condition, and throws an exception if more than
+	 * one such element exists.
+	 * @param predicate A function to test an element for a condition.
+	 */
+	single(predicate : (item : T) => boolean) : T;
+
+	/**
+	 * Returns the only element of a sequence, or a default value if the sequence is empty; this method throws an exception
+	 * if there is more than one element in the sequence.
+	 */
+	singleOrDefault() : T | null;
+
+	/**
+	 * Returns the only element of a sequence, or a specified default value if the sequence is empty; this method throws
+	 * an exception if there is more than one element in the sequence.
+	 * @param defaultValue The default value to return if the sequence is empty.
+	 */
+	singleOrDefault(defaultValue : T) : T | null;
+
+	/**
+	 * Returns the only element of a sequence, or a specified default value if the sequence is empty; this method throws
+	 * an exception if there is more than one element in the sequence.
+	 * @param predicate A function to test an element for a condition.
+	 */
+	singleOrDefault(predicate : (item : T) => boolean) : T | null;
+
+	/**
+	 * Returns the only element of a sequence that satisfies a specified condition, or a specified default value if no
+	 * such element exists; this method throws an exception if more than one element satisfies the condition.
+	 * @param predicate A function to test an element for a condition.
+	 * @param defaultValue The default value to return if the sequence is empty.
+	 */
+	singleOrDefault(
+		predicate : (item : T) => boolean,
+		defaultValue : T) : T | null;
+
+	/**
+	 * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
+	 * @param count The number of elements to skip before returning the remaining elements.
+	 */
+	skip(count : number) : IEnumerable<T>;
+
+	/**
+	 * Returns a new enumerable collection that contains the elements from source with the last count elements of the
+	 * source collection omitted.
+	 * @param count The number of elements to omit from the end of the collection.
+	 */
+	skipLast(count : number) : IEnumerable<T>;
+
+	/**
+	 * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
+	 * @param predicate A function to test each element for a condition.
+	 */
+	skipWhile(predicate : (item : T) => boolean) : IEnumerable<T>;
+
+	/**
+	 * Returns a specified number of contiguous elements from the start of a sequence.
+	 * @param count The number of elements to return
+	 */
+	take(count : number) : IEnumerable<T>;
+
+	/**
+	 * Returns a specified number of contiguous elements from the start of a sequence.
+	 * @param range The range of elements to return, which has start and end indexes either from the beginning or the
+	 * end of the sequence.
+	 */
+	take(range : [start : number, end : number]) : IEnumerable<T>;
+
+	/**
+	 * Returns a new enumerable collection that contains the last count elements from source.
+	 * @param count The number of elements to take from the end of the collection.
+	 */
+	takeLast(count : number) : IEnumerable<T>;
+
+	/**
+	 * Returns elements from a sequence as long as a specified condition is true.
+	 * @param predicate A function to test each element for a condition.
+	 */
+	takeWhile(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean)) : IEnumerable<T>;
+
+	/**
+	 * Creates an array from an enumerable.
+	 */
+	toArray() : Array<T>;
+
+	/**
+	 * Creates a Map from an enumerable according to specified key selector and element selector functions.
+	 * @param keySelector A function to extract a key from each element.
+	 * @param valueSelector A transform function to produce a result element value from each element.
+	 */
+	toDictionary<K, V>(keySelector : (item : T) => K, valueSelector : (item : T) => V) : Map<K, V>;
+
+	/**
+	 * Produces the set union of two sequences by using a specified comparer.
+	 * @param source An enumerable whose distinct elements form the second set for the union.
+	 * @param comparer The comparer to compare values.
+	 */
+	union(source : Array<T>, comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
+
+	/**
+	 * Produces the set union of two sequences according to a specified key selector function.
+	 * @param source An enumerable whose distinct elements form the second set for the union.
+	 * @param keySelector A function to extract the key for each element.
+	 * @param comparer The comparer to compare values.
+	 */
+	unionBy<TKey>(
+		source : Array<T>, keySelector : (item : T) => TKey,
+		comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
+
+	/**
+	 * Filters a sequence of values based on a predicate. Each element's index is used in the logic of the predicate function.
+	 * @param predicate A function to test each source element for a condition; the second parameter of the function
+	 * represents the index of the source element.
+	 */
+	where(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean)) : IEnumerable<T>;
+}
+
+type IEnumerable<T> = Generator<T>;
+
 (function () {
-
-	interface IEnumerable<T> extends Generator<T> {
-		/**
-		 * Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
-		 * @param seed The initial accumulator value.
-		 * @param accumulator An accumulator function to be invoked on each element.
-		 */
-		aggregate<TSeed, TReturn>(seed : TSeed, accumulator : (seed : TSeed, item : T) => TReturn) : TReturn
-
-		/**
-		 * Determines whether all elements of a sequence satisfy a condition.
-		 * @param predicate
-		 */
-		all(predicate : (item : T) => boolean) : boolean
-
-		/**
-		 * Determines whether a sequence contains any elements.
-		 */
-		any() : boolean
-
-		/**
-		 * Determines whether any element of a sequence satisfies a condition.
-		 * @param predicate A function to test each element for a condition.
-		 */
-		any(predicate : (item : T) => boolean) : boolean
-
-		/**
-		 * Appends a value to the end of the sequence.
-		 * @param element The value to append to
-		 */
-		append(element : T) : IEnumerable<T>
-
-		/**
-		 * Returns the input typed as enumerable.
-		 */
-		asEnumerable() : IEnumerable<T>
-
-		/**
-		 * Splits the elements of a sequence into chunks of size at most
-		 * @param size The maximum size of each chunk.
-		 */
-		chunk(size : number) : IEnumerable<Array<T>>
-
-		/**
-		 * Concatenates two sequences.
-		 * @param source The sequence to concatenate to the current.
-		 */
-		concat(source : IEnumerable<T>) : IEnumerable<T>
-
-		/**
-		 * Determines whether a sequence contains a specified element by using the default equality comparer.
-		 * @param value The value to locate in the sequence.
-		 */
-		contains(value : T) : boolean
-
-		/**
-		 * Determines whether a sequence contains a specified element by using a specified comparer.
-		 * @param value The value to locate in the sequence.
-		 * @param comparer An equality comparer to compare values.
-		 */
-		contains(value : T, comparer? : (left : T, right : T) => boolean) : boolean
-
-		/**
-		 * Returns the number of elements in a sequence.
-		 */
-		count() : number
-
-		/**
-		 * Returns a number that represents how many elements in the specified sequence satisfy a condition.
-		 * @param predicate A function to test each element for a condition.
-		 */
-		count(predicate : (item : T) => boolean) : number
-
-		/**
-		 * Returns distinct elements from a sequence by using the default equality comparer to compare values.
-		 */
-		distinct() : IEnumerable<T>
-
-		/**
-		 * Returns distinct elements from a sequence by using a specified comparer to compare values.
-		 * @param comparer An comparer to compare values.
-		 */
-		distinct(comparer : (left : T, right : T) => boolean) : IEnumerable<T>
-
-		/**
-		 * Returns distinct elements from a sequence according to a specified key selector function.
-		 * @param keySelector A function to extract the key for each element.
-		 */
-		distinctBy<TKey>(keySelector : (item : T) => TKey)
-		: IEnumerable<T>
-
-		/**
-		 * Returns distinct elements from a sequence according to a specified key selector function and using a specified
-		 * comparer to compare keys.
-		 * @param keySelector A function to extract the key for each element.
-		 * @param comparer An comparer to compare keys.
-		 */
-		distinctBy<TKey>(keySelector : (item : T) => TKey, comparer? : (left : TKey, right : TKey) => boolean)
-		: IEnumerable<T>
-
-		/**
-		 * Returns the element at a specified index in a sequence.
-		 * @param index The zero-based index of the element to retrieve.
-		 */
-		elementAt(index : number) : T
-
-		/**
-		 * Returns the element at a specified index in a sequence.
-		 * @param index The index of the element to retrieve, which is either from the beginning or the end of the sequence.
-		 */
-		elementAtOrDefault(index : number) : T | null
-
-		/**
-		 * Produces the set difference of two sequences by using the default equality comparer to compare values.
-		 * @param source An array whose elements that also occur in the first sequence will cause those elements to be
-		 * removed from the returned sequence.
-		 */
-		except(source : Array<T> | IEnumerable<T>) : IEnumerable<T>
-
-		/**
-		 * Produces the set difference of two sequences by using the specified comparer to compare values.
-		 * @param source An array whose elements that also occur in the first sequence will cause those elements to be
-		 * removed from the returned sequence.
-		 * @param comparer An comparer to compare values.
-		 */
-		except(source : Array<T> | IEnumerable<T>, comparer? : (left : T, right : T) => boolean) : IEnumerable<T>
-
-		/**
-		 * Produces the set difference of two sequences according to a specified key selector function.
-		 * @param source An source whose keys that also occur in the first sequence will cause those elements to be removed
-		 * from the returned sequence.
-		 * @param keySelector A function to extract the key for each element.
-		 */
-		exceptBy<TKey>(source : Array<T> | IEnumerable<T>, keySelector : (item : T) => TKey) : IEnumerable<T>
-
-		/**
-		 * Produces the set difference of two sequences according to a specified key selector function.
-		 * @param source An source whose keys that also occur in the first sequence will cause those elements to be removed
-		 * from the returned sequence.
-		 * @param keySelector A function to extract the key for each element.
-		 * @param comparer The comparer to compare values.
-		 */
-		exceptBy<TKey>(source : Array<T> | IEnumerable<T>, keySelector : (item : T) => TKey, comparer?
-		: (left : TKey, right : TKey) => boolean) : IEnumerable<T>
-
-		/**
-		 * Returns the first element of a sequence.
-		 */
-		first() : T
-
-		/**
-		 * Returns the first element in a sequence that satisfies a specified condition.
-		 * @param predicate A function to test each element for a condition.
-		 */
-		first(predicate : (item : T) => boolean) : T
-
-		/**
-		 * Returns the first element of a sequence, or a default value if the sequence contains no elements.
-		 */
-		firstOrDefault() : T | null
-
-		/**
-		 * Returns the first element of a sequence, or a specified default value if the sequence contains no elements.
-		 * @param defaultValue The default value to return if the sequence is empty.
-		 */
-		firstOrDefault(defaultValue : T) : T | null
-
-		/**
-		 * Returns the first element of a sequence, or a default value if the sequence contains no elements.
-		 * @param predicate A function to test each element for a condition.
-		 */
-		firstOrDefault(predicate : (item : T) => boolean) : T | null
-
-		/**
-		 * Returns the first element of the sequence that satisfies a condition, or a specified default value if no such element is found.
-		 * @param predicate A function to test each element for a condition.
-		 * @param defaultValue The default value to return if the sequence is empty.
-		 */
-		firstOrDefault(predicate : (item : T) => boolean, defaultValue : T) : T | null
-
-		/**
-		 * Groups the elements of a sequence according to a specified key selector function.
-		 * @param keySelector A function to extract the key for each element.
-		 */
-		groupBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<Array<T> & { key : TKey }>
-
-		/**
-		 * Returns the last element of a sequence.
-		 */
-		last() : T
-
-		/**
-		 * Returns the last element of a sequence that satisfies a specified condition.
-		 * @param predicate A function to test each element for a condition.
-		 */
-		last(predicate : (item : T) => boolean) : T
-
-		/**
-		 * Returns the last element of a sequence, or a default value if the sequence contains no elements.
-		 */
-		lastOrDefault() : T | null
-
-		/**
-		 * Returns the last element of a sequence, or a specified default value if the sequence contains no elements.
-		 * @param defaultValue The default value to return if the sequence is empty.
-		 */
-		lastOrDefault(defaultValue : T) : T | null
-
-		/**
-		 * Returns the last element of a sequence that satisfies a condition or a default value if no such element is found.
-		 * @param predicate A function to test each element for a condition.
-		 */
-		lastOrDefault(predicate : (item : T) => boolean) : T | null
-
-		/**
-		 * Returns the last element of a sequence that satisfies a condition, or a specified default value if no such element is found.
-		 * @param predicate A function to test each element for a condition.
-		 * @param defaultValue The default value to return if the sequence is empty.
-		 */
-		lastOrDefault(predicate : (item : T) => boolean, defaultValue : T) : T | null
-
-		/**
-		 * Sorts the elements of a sequence in ascending order.
-		 */
-		order() : IEnumerable<T>
-
-		/**
-		 * Sorts the elements of a sequence in ascending order.
-		 * @param comparer An comparer to compare keys.
-		 */
-		order(comparer : (current : T, exist : T) => number) : IEnumerable<T>
-
-		/**
-		 * Sorts the elements of a sequence in ascending order according to a key.
-		 * @param keySelector A function to extract a key from an element.
-		 */
-		orderBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<T>
-
-		/**
-		 * Sorts the elements of a sequence in ascending order according to a key.
-		 * @param keySelector A function to extract a key from an element.
-		 * @param comparer An comparer to compare keys.
-		 */
-		orderBy<TKey>(keySelector : (item : T) => TKey, comparer : (current : TKey, exist : TKey) => number) : IEnumerable<T>
-
-		/**
-		 * Sorts the elements of a sequence in descending order.
-		 */
-		orderDescending() : IEnumerable<T>
-
-		/**
-		 * Sorts the elements of a sequence in descending order.
-		 * @param comparer An comparer to compare keys.
-		 */
-		orderDescending(comparer : (current : T, exist : T) => number) : IEnumerable<T>
-
-		/**
-		 * Sorts the elements of a sequence in descending order according to a key.
-		 * @param keySelector A function to extract a key from an element.
-		 */
-		orderByDescending<TKey>(keySelector : (item : T) => TKey) : IEnumerable<T>
-
-		/**
-		 * Sorts the elements of a sequence in descending order according to a key.
-		 * @param keySelector A function to extract a key from an element.
-		 * @param comparer An comparer to compare keys.
-		 */
-		orderByDescending<TKey>(keySelector : (item : T) => TKey, comparer : (current : TKey, exist : TKey) => number)
-		: IEnumerable<T>
-
-		/**
-		 * Adds a value to the beginning of the sequence.
-		 * @param element The value to prepend to
-		 */
-		prepend(element : T) : IEnumerable<T>
-
-		/**
-		 * Inverts the order of the elements in a sequence.
-		 */
-		reverse() : IEnumerable<T>
-
-		/**
-		 * Projects each element of a sequence into a new form by incorporating the element's index.
-		 * @param selector A transform function to apply to each element.
-		 */
-		select<TReturn>(selector : ((item : T) => TReturn) | ((item : T, index : number) => TReturn))
-		: IEnumerable<TReturn>
-
-		/**
-		 * Projects each element of a sequence to an array and flattens the resulting sequences into one sequence.
-		 * @param selector A transform function to apply to each element.
-		 */
-		selectMany<TReturn>(selector : (item : T) => IEnumerable<TReturn>) : IEnumerable<TReturn>
-
-		/**
-		 * Returns the only element of a sequence that satisfies a specified condition, and throws an exception if more than
-		 * one such element exists.
-		 */
-		single() : T
-
-		/**
-		 * Returns the only element of a sequence that satisfies a specified condition, and throws an exception if more than
-		 * one such element exists.
-		 * @param predicate A function to test an element for a condition.
-		 */
-		single(predicate : (item : T) => boolean) : T
-
-		/**
-		 * Returns the only element of a sequence, or a default value if the sequence is empty; this method throws an exception
-		 * if there is more than one element in the sequence.
-		 */
-		singleOrDefault() : T | null
-
-		/**
-		 * Returns the only element of a sequence, or a specified default value if the sequence is empty; this method throws
-		 * an exception if there is more than one element in the sequence.
-		 * @param defaultValue The default value to return if the sequence is empty.
-		 */
-		singleOrDefault(defaultValue : T) : T | null
-
-		/**
-		 * Returns the only element of a sequence, or a specified default value if the sequence is empty; this method throws
-		 * an exception if there is more than one element in the sequence.
-		 * @param predicate A function to test an element for a condition.
-		 */
-		singleOrDefault(predicate : (item : T) => boolean) : T | null
-
-		/**
-		 * Returns the only element of a sequence that satisfies a specified condition, or a specified default value if no
-		 * such element exists; this method throws an exception if more than one element satisfies the condition.
-		 * @param predicate A function to test an element for a condition.
-		 * @param defaultValue The default value to return if the sequence is empty.
-		 */
-		singleOrDefault(predicate : (item : T) => boolean, defaultValue : T) : T | null
-
-		/**
-		 * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
-		 * @param count The number of elements to skip before returning the remaining elements.
-		 */
-		skip(count : number) : IEnumerable<T>
-
-		/**
-		 * Returns a new enumerable collection that contains the elements from source with the last count elements of the
-		 * source collection omitted.
-		 * @param count The number of elements to omit from the end of the collection.
-		 */
-		skipLast(count : number) : IEnumerable<T>
-
-		/**
-		 * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
-		 * @param predicate A function to test each element for a condition.
-		 */
-		skipWhile(predicate : (item : T) => boolean) : IEnumerable<T>
-
-		/**
-		 * Returns a specified number of contiguous elements from the start of a sequence.
-		 * @param count The number of elements to return
-		 */
-		take(count : number) : IEnumerable<T>
-
-		/**
-		 * Returns a specified number of contiguous elements from the start of a sequence.
-		 * @param range The range of elements to return, which has start and end indexes either from the beginning or the
-		 * end of the sequence.
-		 */
-		take(range : [start : number, end : number]) : IEnumerable<T>
-
-		/**
-		 * Returns a new enumerable collection that contains the last count elements from source.
-		 * @param count The number of elements to take from the end of the collection.
-		 */
-		takeLast(count : number) : IEnumerable<T>
-
-		/**
-		 * Returns elements from a sequence as long as a specified condition is true.
-		 * @param predicate A function to test each element for a condition.
-		 */
-		takeWhile(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean))
-		: IEnumerable<T>
-
-		/**
-		 * Creates an array from an enumerable.
-		 */
-		toArray() : Array<T>
-
-		/**
-		 * Creates a Map from an enumerable according to specified key selector and element selector functions.
-		 * @param keySelector A function to extract a key from each element.
-		 * @param valueSelector A transform function to produce a result element value from each element.
-		 */
-		//@ts-ignore
-		toDictionary<K, V>(keySelector : (item : T) => K, valueSelector : (item : T) => V) : Map<K, V>
-
-		/**
-		 * Produces the set union of two sequences by using a specified comparer.
-		 * @param source An enumerable whose distinct elements form the second set for the union.
-		 * @param comparer The comparer to compare values.
-		 */
-		union(source : Array<T>, comparer? : (left : T, right : T) => boolean) : IEnumerable<T>
-
-		/**
-		 * Produces the set union of two sequences according to a specified key selector function.
-		 * @param source An enumerable whose distinct elements form the second set for the union.
-		 * @param keySelector A function to extract the key for each element.
-		 * @param comparer The comparer to compare values.
-		 */
-		unionBy<TKey>(source : Array<T>, keySelector : (item : T) => TKey, comparer? : (left : TKey, right : TKey) => boolean)
-		: IEnumerable<T>
-
-		/**
-		 * Filters a sequence of values based on a predicate. Each element's index is used in the logic of the predicate function.
-		 * @param predicate A function to test each source element for a condition; the second parameter of the function
-		 * represents the index of the source element.
-		 */
-		where(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean)) : IEnumerable<T>
-	}
 
 	interface IEnumerableArray<T> extends IEnumerable<T> {
 
@@ -456,14 +509,18 @@
 		 * @param start The zero-based index at which the range starts.
 		 * @param count The number of elements in the range.
 		 */
-		getRange(start : number, count : number) : Array<T>
+		getRange(
+			start : number,
+			count : number) : Array<T>
 
 		/**
 		 * Inserts an element into the array at the specified index.
 		 * @param index The zero-based index at which item should be inserted.
 		 * @param item The object to insert. The value can be null for reference types.
 		 */
-		insert(index : number, item : T) : void
+		insert(
+			index : number,
+			item : T) : void
 
 		/**
 		 * Removes the first occurrence of a specific object from the array.
@@ -489,14 +546,18 @@
 
 		containsValue(value : V) : boolean
 
-		tryAdd(key : K, value : V) : boolean
+		tryAdd(
+			key : K,
+			value : V) : boolean
 
-		tryGetValue(key : K, valueGetter : (value : V) => void) : boolean
+		tryGetValue(
+			key : K,
+			valueGetter : (value : V) => void) : boolean
 	}
 
-	class EmptyGenerator<T> implements Generator<T> {
-		[Symbol.iterator]() : Generator<T, T, T> {
-			return undefined;
+	class Enumerable<T> implements IEnumerable<T> {
+		[Symbol.iterator]() : Generator<T> {
+			return this;
 		}
 
 		next(...args : [] | [unknown]) : IteratorResult<T, T>;
@@ -513,10 +574,9 @@
 			return undefined;
 		}
 
-	}
-
-	class Enumerable<T> extends EmptyGenerator<T> implements IEnumerable<T> {
-		aggregate<TSeed, TReturn>(seed : TSeed, accumulator : (seed : TSeed, item : T) => TReturn) : TReturn {
+		aggregate<TSeed, TReturn>(
+			seed : TSeed,
+			accumulator : (seed : TSeed, item : T) => TReturn) : TReturn {
 			let tmp : TSeed | TReturn = seed;
 			for (const item of this) tmp = accumulator(seed, item)
 			return tmp as TReturn;
@@ -533,7 +593,6 @@
 			return this.firstOrDefault(predicate) !== null;
 		}
 
-		// @ts-ignore
 		* append(element : T) : IEnumerable<T> {
 			for (const item of this) yield item
 			yield element
@@ -543,7 +602,6 @@
 			return this;
 		}
 
-		// @ts-ignore
 		* chunk(size : number) : IEnumerable<Array<T>> {
 			let chunk = new Array<T>()
 			for (const item of this) {
@@ -556,10 +614,8 @@
 			yield chunk
 		}
 
-		// @ts-ignore
 		* concat(source : IEnumerable<T>) : IEnumerable<T> {
 			for (const item of this) yield item
-			// @ts-ignore
 			for (const item of source) yield item
 		}
 
@@ -582,8 +638,8 @@
 
 		distinct() : IEnumerable<T>;
 		distinct(comparer : (left : T, right : T) => boolean) : IEnumerable<T>;
-		//@ts-ignore
-		* distinct(comparer? : (left : T, right : T) => boolean) : IEnumerable<T> {
+		* distinct(comparer? : (left : T, right : T) => boolean) : IEnumerable<T>
+		{
 			comparer ??= Object.is;
 			const stack = []
 			for (const item of this) {
@@ -595,8 +651,10 @@
 		}
 
 		distinctBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<T>;
-		//@ts-ignore
-		* distinctBy<TKey>(keySelector : (item : T) => TKey, comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T> {
+		* distinctBy<TKey>(
+			keySelector : (item : T) => TKey,
+			comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>
+		{
 			comparer ??= Object.is;
 			const stack = []
 			for (const item of this) {
@@ -622,9 +680,13 @@
 		}
 
 		except(source : Array<T> | IEnumerable<T>) : IEnumerable<T>;
-		except(source : Array<T> | IEnumerable<T>, comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
-		//@ts-ignore
-		* except(source : Array<T> | IEnumerable<T>, comparer? : (left : T, right : T) => boolean) : IEnumerable<T> {
+		except(
+			source : Array<T> | IEnumerable<T>,
+			comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
+		* except(
+			source : Array<T> | IEnumerable<T>,
+			comparer? : (left : T, right : T) => boolean) : IEnumerable<T>
+		{
 			comparer ??= Object.is
 			const compares = []
 			for (const item of source) {
@@ -638,9 +700,14 @@
 			}
 		}
 
-		exceptBy<TKey>(source : Array<T> | IEnumerable<T>, keySelector : (item : T) => TKey) : IEnumerable<T>;
-		//@ts-ignore
-		* exceptBy<TKey>(source : Array<T> | IEnumerable<T>, keySelector : (item : T) => TKey, comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T> {
+		exceptBy<TKey>(
+			source : Array<T> | IEnumerable<T>,
+			keySelector : (item : T) => TKey) : IEnumerable<T>;
+		* exceptBy<TKey>(
+			source : Array<T> | IEnumerable<T>,
+			keySelector : (item : T) => TKey,
+			comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>
+		{
 			comparer ??= Object.is
 			const compares = []
 			for (const item of source) {
@@ -654,7 +721,6 @@
 			}
 		}
 
-
 		first() : T;
 		first(predicate : (item : T) => boolean) : T;
 		first(predicate? : (item : T) => boolean) : T {
@@ -666,8 +732,12 @@
 		firstOrDefault() : T | null;
 		firstOrDefault(defaultValue : T) : T | null;
 		firstOrDefault(predicate : (item : T) => boolean) : T | null;
-		firstOrDefault(predicate : (item : T) => boolean, defaultValue : T) : T | null;
-		firstOrDefault(predicate? : T | ((item : T) => boolean), defaultValue? : T) : T | null {
+		firstOrDefault(
+			predicate : (item : T) => boolean,
+			defaultValue : T) : T | null;
+		firstOrDefault(
+			predicate? : T | ((item : T) => boolean),
+			defaultValue? : T) : T | null {
 			predicate ??= () => true;
 			if (typeof (predicate) != 'function') {
 				defaultValue = predicate;
@@ -677,20 +747,41 @@
 			return defaultValue;
 		}
 
-		//@ts-ignore
-		* groupBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<Array<T> & { key : TKey }> {
-			let map = new Map();
-			for (const item of this) {
-				const key = keySelector(item);
-				let cache = map.get(key);
-				if (cache === undefined) {
-					cache = [];
-					cache.key = key;
-					map.set(key, cache)
-				}
-				cache.push(item)
+		groupBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<Array<T> & { key : TKey }>;
+		groupBy<TKey>(
+			keySelector : (item : T) => TKey,
+			comparer : (left : TKey, right : TKey) => boolean) : IEnumerable<Array<T> & { key : TKey }>;
+		groupBy<TKey, TElement>(
+			keySelector : (item : T) => TKey,
+			elementSelector : (item : T) => TElement) : IEnumerable<Array<TElement> & { key : TKey }>;
+		groupBy<TKey, TElement>(
+			keySelector : (item : T) => TKey,
+			elementSelector : (item : T) => TElement,
+			comparer : (left : TKey, right : TKey) => boolean) : IEnumerable<Array<TElement> & { key : TKey }>;
+		* groupBy<TKey, TElement>(
+			keySelector : (item : T) => TKey,
+			elementSelector? : ((item : T) => TElement) | ((left : TKey, right : TKey) => boolean),
+			comparer? : (left : TKey, right : TKey) => boolean)
+			: IEnumerable<Array<T> & { key : TKey } | Array<TElement> & { key : TKey }>
+		{
+			comparer ??= Object.is;
+			elementSelector ??= (x : any) => x
+			if (elementSelector.length == 2) {
+				comparer = elementSelector as (left : TKey, right : TKey) => boolean
+				elementSelector = (x : any) => x
 			}
-			for (let value of map.values()) yield value
+			const groups = []
+			for (const item of this) {
+				const key = keySelector(item)
+				let cache = groups.find(x => comparer(x.key, key))
+				if (!cache) {
+					cache = []
+					cache.key = key
+					groups.push(cache)
+				}
+				cache.push((elementSelector as (item : T) => any)(item))
+			}
+			for (const group of groups) yield group;
 		}
 
 		last() : T;
@@ -704,8 +795,12 @@
 		lastOrDefault() : T | null;
 		lastOrDefault(defaultValue : T) : T | null;
 		lastOrDefault(predicate : (item : T) => boolean) : T | null;
-		lastOrDefault(predicate : (item : T) => boolean, defaultValue : T) : T | null;
-		lastOrDefault(predicate? : T | ((item : T) => boolean), defaultValue? : T) : T | null {
+		lastOrDefault(
+			predicate : (item : T) => boolean,
+			defaultValue : T) : T | null;
+		lastOrDefault(
+			predicate? : T | ((item : T) => boolean),
+			defaultValue? : T) : T | null {
 			predicate ??= () => true;
 			if (typeof (predicate) != 'function') {
 				defaultValue = predicate;
@@ -720,9 +815,10 @@
 
 		order() : IEnumerable<T>;
 		order(comparer : (current : T, exist : T) => number) : IEnumerable<T>;
-		// @ts-ignore
 		* order(comparer? : (current : T, exist : T) => number) : IEnumerable<T> {
-			comparer ??= (left, right) => left as any - (right as any)
+			comparer ??= (
+				left,
+				right) => left as any - (right as any)
 			const stack = []
 			for (const item of this) {
 				const index = stack.findIndex((x : any) => comparer(item, x) <= 0)
@@ -735,10 +831,15 @@
 		}
 
 		orderBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<T>;
-		orderBy<TKey>(keySelector : (item : T) => TKey, comparer : (current : TKey, exist : TKey) => number) : IEnumerable<T>;
-		// @ts-ignore
-		* orderBy<TKey>(keySelector : (item : T) => TKey, comparer? : (current : TKey, exist : TKey) => number) : IEnumerable<T> {
-			comparer ??= (left, right) => left as any - (right as any)
+		orderBy<TKey>(
+			keySelector : (item : T) => TKey,
+			comparer : (current : TKey, exist : TKey) => number) : IEnumerable<T>;
+		* orderBy<TKey>(
+			keySelector : (item : T) => TKey,
+			comparer? : (current : TKey, exist : TKey) => number) : IEnumerable<T> {
+			comparer ??= (
+				left,
+				right) => left as any - (right as any)
 			const stack = []
 			for (const item of this) {
 				const index = stack.findIndex(x => comparer(keySelector(item), keySelector(x)) <= 0)
@@ -752,10 +853,15 @@
 		}
 
 		orderByDescending<TKey>(keySelector : (item : T) => TKey) : IEnumerable<T>;
-		orderByDescending<TKey>(keySelector : (item : T) => TKey, comparer : (current : TKey, exist : TKey) => number) : IEnumerable<T>;
-		// @ts-ignore
-		* orderByDescending<TKey>(keySelector : (item : T) => TKey, comparer? : (current : TKey, exist : TKey) => number) : IEnumerable<T> {
-			comparer ??= (left, right) => left as any - (right as any)
+		orderByDescending<TKey>(
+			keySelector : (item : T) => TKey,
+			comparer : (current : TKey, exist : TKey) => number) : IEnumerable<T>;
+		* orderByDescending<TKey>(
+			keySelector : (item : T) => TKey,
+			comparer? : (current : TKey, exist : TKey) => number) : IEnumerable<T> {
+			comparer ??= (
+				left,
+				right) => left as any - (right as any)
 			const stack = []
 			for (const item of this) {
 				const index = stack.findIndex(x => comparer(keySelector(item), keySelector(x)) >= 0)
@@ -770,9 +876,10 @@
 
 		orderDescending() : IEnumerable<T>;
 		orderDescending(comparer : (current : T, exist : T) => number) : IEnumerable<T>;
-		// @ts-ignore
 		* orderDescending(comparer? : (current : T, exist : T) => number) : IEnumerable<T> {
-			comparer ??= (left, right) => left as any - (right as any)
+			comparer ??= (
+				left,
+				right) => left as any - (right as any)
 			const stack = []
 			for (const item of this) {
 				const index = stack.findIndex(x => comparer(item, x) >= 0)
@@ -785,13 +892,11 @@
 			for (const item of stack) yield item
 		}
 
-		// @ts-ignore
 		* prepend(element : T) : IEnumerable<T> {
 			yield element;
 			for (const item of this) yield item
 		}
 
-		// @ts-ignore
 		* reverse() : IEnumerable<T> {
 			const arr = []
 			for (const item of this) {
@@ -802,15 +907,14 @@
 			}
 		}
 
-		// @ts-ignore
-		* select<TReturn>(selector : ((item : T) => TReturn) | ((item : T, index : number) => TReturn)) : IEnumerable<TReturn> {
+		* select<TReturn>(selector : ((item : T) => TReturn) | ((item : T, index : number) => TReturn))
+			: IEnumerable<TReturn> {
 			let index = 0
 			for (const item of this) {
 				yield selector(item, index++)
 			}
 		}
 
-		// @ts-ignore
 		* selectMany<TReturn>(selector : (item : T) => IEnumerable<TReturn>) : IEnumerable<TReturn> {
 			for (const item of this) {
 				for (let sub of selector(item)) {
@@ -830,8 +934,12 @@
 		singleOrDefault() : T | null;
 		singleOrDefault(defaultValue : T) : T | null;
 		singleOrDefault(predicate : (item : T) => boolean) : T | null;
-		singleOrDefault(predicate : (item : T) => boolean, defaultValue : T) : T | null;
-		singleOrDefault(predicate? : T | ((item : T) => boolean), defaultValue? : T) : T | null {
+		singleOrDefault(
+			predicate : (item : T) => boolean,
+			defaultValue : T) : T | null;
+		singleOrDefault(
+			predicate? : T | ((item : T) => boolean),
+			defaultValue? : T) : T | null {
 			predicate ??= () => true
 			if (typeof (predicate) != 'function') {
 				defaultValue = predicate;
@@ -847,7 +955,6 @@
 			return single
 		}
 
-		// @ts-ignore
 		* skip(count : number) : IEnumerable<T> {
 			for (const item of this) {
 				count--;
@@ -857,7 +964,6 @@
 			}
 		}
 
-		// @ts-ignore
 		* skipLast(count : number) : IEnumerable<T> {
 			const stack = []
 			for (const item of this) {
@@ -868,7 +974,6 @@
 			}
 		}
 
-		// @ts-ignore
 		* skipWhile(predicate : (item : T) => boolean) : IEnumerable<T> {
 			let start = false
 			for (const item of this) {
@@ -879,7 +984,6 @@
 
 		take(count : number) : IEnumerable<T>;
 		take(range : [start : number, end : number]) : IEnumerable<T>;
-		// @ts-ignore
 		* take(count : number | [start : number, end : number]) : IEnumerable<T> {
 			const start = Number.isInteger(count) ? 0 : count[0]
 			const num = Number.isInteger(count) ? count : count[1] > 0 ? count[1] - start : count[1];
@@ -913,7 +1017,6 @@
 			}
 		}
 
-		// @ts-ignore
 		* takeLast(count : number) : IEnumerable<T> {
 			const stack = []
 			for (const item of this) {
@@ -927,8 +1030,8 @@
 			}
 		}
 
-		// @ts-ignore
-		* takeWhile(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean)) : IEnumerable<T> {
+		* takeWhile(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean))
+			: IEnumerable<T> {
 			let index = 0;
 			for (const item of this) {
 				if (!predicate(item, index)) return;
@@ -945,7 +1048,9 @@
 			return ret
 		}
 
-		toDictionary<K, V>(keySelector : (item : T) => K, valueSelector : (item : T) => V) : Map<K, V> {
+		toDictionary<K, V>(
+			keySelector : (item : T) => K,
+			valueSelector : (item : T) => V) : Map<K, V> {
 			let map = new Map();
 			for (const item of this) {
 				const key = keySelector(item)
@@ -956,8 +1061,10 @@
 			return map;
 		}
 
-		// @ts-ignore
-		* union(source : Array<T>, comparer? : (left : T, right : T) => boolean) : IEnumerable<T> {
+		* union(
+			source : Array<T>,
+			comparer? : (left : T, right : T) => boolean) : IEnumerable<T>
+		{
 			comparer ??= Object.is
 			const union = []
 			for (const item of this) {
@@ -975,8 +1082,11 @@
 			}
 		}
 
-		// @ts-ignore
-		* unionBy<TKey>(source : Array<T>, keySelector : (item : T) => TKey, comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T> {
+		* unionBy<TKey>(
+			source : Array<T>,
+			keySelector : (item : T) => TKey,
+			comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>
+		{
 			comparer ??= Object.is
 			const union = []
 			for (const item of this) {
@@ -994,13 +1104,15 @@
 			}
 		}
 
-		// @ts-ignore
-		* where(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean)) : IEnumerable<T> {
+		* where(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean))
+			: IEnumerable<T>
+		{
 			let count = 0
 			for (const item of this) {
 				if (predicate(item, count++)) yield item
 			}
 		}
+
 	}
 
 	class PartialArray<T> extends Enumerable<T> implements IEnumerableArray<T> {
@@ -1016,7 +1128,6 @@
 			}
 		}
 
-		// @ts-ignore
 		* asEnumerable() : IEnumerable<T> {
 			for (const item of this) yield item;
 		}
@@ -1030,7 +1141,9 @@
 		}
 
 		elementAtOrDefault(index : number) : T | null
-		elementAtOrDefault(index : number, defaultValue? : any) : T | null {
+		elementAtOrDefault(
+			index : number,
+			defaultValue? : any) : T | null {
 			return this[index] ?? defaultValue
 		}
 
@@ -1042,11 +1155,15 @@
 			return this.where(match).toArray();
 		}
 
-		getRange(start : number, count : number) : Array<T> {
+		getRange(
+			start : number,
+			count : number) : Array<T> {
 			return this.slice(start, count + start)
 		}
 
-		insert(index : number, item : T) : void {
+		insert(
+			index : number,
+			item : T) : void {
 			this.splice(index, 0, item)
 		}
 
@@ -1082,11 +1199,16 @@
 			throw new Error("Method not implemented.");
 		}
 
-		private splice(number : number, deleteCount? : number, item? : T) : number {
+		private splice(
+			number : number,
+			deleteCount? : number,
+			item? : T) : number {
 			throw new Error("Method not implemented.");
 		}
 
-		private slice(start : number, number : number) : T[] {
+		private slice(
+			start : number,
+			number : number) : T[] {
 			throw new Error("Method not implemented.");
 		}
 
@@ -1109,11 +1231,15 @@
 			return false;
 		}
 
-		tryAdd(key : K, value : V) : boolean {
+		tryAdd(
+			key : K,
+			value : V) : boolean {
 			return !(this.has(key) || !this.set(key, value));
 		}
 
-		tryGetValue(key : K, valueGetter : (value : V) => void) : boolean {
+		tryGetValue(
+			key : K,
+			valueGetter : (value : V) => void) : boolean {
 			let ret = this.get(key);
 			valueGetter(ret);
 			return ret != null;
@@ -1127,7 +1253,9 @@
 			throw new Error("Method not implemented.");
 		}
 
-		private set(key : K, value : V) : boolean {
+		private set(
+			key : K,
+			value : V) : boolean {
 			throw new Error("Method not implemented.");
 		}
 
@@ -1137,28 +1265,25 @@
 	}
 
 
-	function ownPropertiesOf(prototype : any) {
-		return Object.getOwnPropertyNames(prototype).filter(x => {
-			return Object.getOwnPropertyNames(class {
-			}.prototype).findIndex(y => x == y) < 0
-		})
-	}
-
-	function defineProperty(prototype : any, name : string, method : any) {
+	function defineProperty(
+		prototype : any,
+		name : string,
+		method : any)
+	{
 		if (prototype[name] != undefined) return;
 		Object.defineProperty(prototype, name, {
-			value   : method,
+			value: method,
 			writable: false
 		})
 	}
 
-	ownPropertiesOf(PartialMap.prototype).forEach(name => {
+	Object.getOwnPropertyNames(PartialMap.prototype).forEach(name => {
 		defineProperty(Map.prototype, name, PartialMap.prototype[name])
 	})
-	ownPropertiesOf(PartialArray.prototype).forEach(name => {
+	Object.getOwnPropertyNames(PartialArray.prototype).forEach(name => {
 		defineProperty(Array.prototype, name, PartialArray.prototype[name])
 	})
-	ownPropertiesOf(Enumerable.prototype).forEach(name => {
+	Object.getOwnPropertyNames(Enumerable.prototype).forEach(name => {
 		defineProperty((function* () {
 			// @ts-ignore
 		})().__proto__.__proto__, name, Enumerable.prototype[name])
