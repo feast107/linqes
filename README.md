@@ -13,7 +13,7 @@ linqes
 <p align="center">
     <img alt="dotnet-version" src="https://img.shields.io/badge/JavaScript-ES6-EEEE00.svg"/>
     <img alt="dotnet-version" src="https://img.shields.io/badge/TypeScript-Declare-blue.svg"/>
-    <img alt="npm" src="https://img.shields.io/badge/npm-v1.0.1-FF3300.svg"/>
+    <img alt="npm" src="https://img.shields.io/badge/npm-v1.0.3-FF3300.svg"/>
     <img alt="license" src="https://img.shields.io/badge/license-MIT-FF00FF.svg"/>
 </p>
 
