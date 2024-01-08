@@ -578,6 +578,8 @@ declare interface Array<T> {
 	 */
 	clear() : void
 
+	concat(source : IEnumerable<T>) : IEnumerable<T>
+
 	/**
 	 * Determines whether the array contains elements that match the conditions defined by the specified predicate.
 	 * @param match The delegate that defines the conditions of the elements to search for.
@@ -621,6 +623,14 @@ declare interface Array<T> {
 	 * @param index The zero-based index of the element to remove.
 	 */
 	removeAt(index : number) : T | undefined
+
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : T) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : T, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
+
 }
 
 /**
