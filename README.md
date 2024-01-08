@@ -35,16 +35,27 @@ or load through html
 ```ts
 import 'linqes'
 
-[1,2,3,4,...[]]
-    .asEnumerable()
-    .where(x => x >= 2)
-    .select(x => [x,[x * 2,[x * 3]]])
-    .selectMany(x => x[1])
-    .groupBy(x => x)
-    .chunk(3)
-    .reverse()
-    //...
-    .toArray()
+let enumerable : IEnumerable<number> = new List<number>();
+
+enumerable = enumerable
+	.where(x => x > 3)
+	.append(1)
+	.concat([1, 2, 3, 4])
+	.prepend(3)
+	.select(x => x * 2)
+	.reverse()
+	.chunk(3)
+	.selectMany(x => x) 
+
+const list : List<number> = enumerable.toArray()
+
+for (const item of enumerable) {
+	console.log(item) // => 8,6,4,2,2,6
+}
+
+let chars : IEnumerable<string> = 'This is a string';
+chars.select(x => x + ' ').toArray()
+
 ```
 
 ## Iterable types

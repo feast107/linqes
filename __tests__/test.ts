@@ -1,13 +1,22 @@
 import '../types/index'
 
+let enumerable : IEnumerable<number> = new List<number>();
 
-const list = new List<number>()
-const enumerable : IEnumerable<number> = list;
+enumerable = enumerable
+	.where(x => x > 3)
+	.append(1)
+	.concat([1, 2, 3, 4])
+	.prepend(3)
+	.select(x => x * 2)
+	.reverse()
+	.chunk(3)
+	.selectMany(x => x)
 
-const ie : IEnumerable<any> = new Array<number>();
+const list : List<number> = enumerable.toArray()
 
 for (const item of enumerable) {
-
+	console.log(item)
 }
 
-const iter = enumerable[Symbol.iterator]
+let chars : IEnumerable<string> = 'This is a string';
+chars.select(x => x + ' ').toArray()
