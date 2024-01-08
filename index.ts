@@ -142,7 +142,7 @@ declare interface Generator<T> {
 	 * @param source An array whose elements that also occur in the first sequence will cause those elements to be
 	 * removed from the returned sequence.
 	 */
-	except(source : Array<T> | IEnumerable<T>) : IEnumerable<T>;
+	except(source : IEnumerable<T>) : IEnumerable<T>;
 
 	/**
 	 * Produces the set difference of two sequences by using the specified comparer to compare values.
@@ -151,7 +151,7 @@ declare interface Generator<T> {
 	 * @param comparer An comparer to compare values.
 	 */
 	except(
-		source : Array<T> | IEnumerable<T>,
+		source : IEnumerable<T>,
 		comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
 
 	/**
@@ -161,7 +161,7 @@ declare interface Generator<T> {
 	 * @param keySelector A function to extract the key for each element.
 	 */
 	exceptBy<TKey>(
-		source : Array<T> | IEnumerable<T>,
+		source : IEnumerable<T>,
 		keySelector : (item : T) => TKey) : IEnumerable<T>;
 
 	/**
@@ -172,7 +172,7 @@ declare interface Generator<T> {
 	 * @param comparer The comparer to compare values.
 	 */
 	exceptBy<TKey>(
-		source : Array<T> | IEnumerable<T>,
+		source : IEnumerable<T>,
 		keySelector : (item : T) => TKey,
 		comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
 
@@ -249,6 +249,66 @@ declare interface Generator<T> {
 		keySelector : (item : T) => TKey,
 		elementSelector : (item : T) => TElement,
 		comparer : (left : TKey, right : TKey) => boolean) : IEnumerable<Array<TElement> & { key : TKey }>;
+
+	/**
+	 * Correlates the elements of two sequences based on equality of keys and groups the results. The default equality
+	 * comparer is used to compare keys.
+	 * @param inner The sequence to join to the sequence.
+	 * @param keySelector A function to extract the join key from each element of the source sequence.
+	 * @param innerKeySelector A function to extract the join key from each element of the inner sequence.
+	 * @param resultSelector A function to create a result element from an element from the first sequence and a collection
+	 * of matching elements from the second sequence.
+	 */
+	groupJoin<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : T) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : T, inner : Array<TInner>) => TResult) : IEnumerable<TResult>;
+
+	/**
+	 * Correlates the elements of two sequences based on equality of keys and groups the results. A specified comparer
+	 * is used to compare keys.
+	 * @param inner The sequence to join to the sequence.
+	 * @param keySelector A function to extract the join key from each element of the source sequence.
+	 * @param innerKeySelector A function to extract the join key from each element of the inner sequence.
+	 * @param resultSelector A function to create a result element from an element from the first sequence and a collection
+	 * of matching elements from the second sequence.
+	 * @param comparer A comparer to hash and compare keys.
+	 */
+	groupJoin<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : T) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : T, inner : Array<TInner>) => TResult,
+		comparer : (outerKey : TKey, innerKey : TKey) => boolean) : IEnumerable<TResult>;
+
+	/**
+	 * Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
+	 * @param inner The sequence to join to the sequence.
+	 * @param keySelector A function to extract the join key from each element of the source sequence.
+	 * @param innerKeySelector A function to extract the join key from each element of the inner sequence.
+	 * @param resultSelector A function to create a result element from two matching elements.
+	 */
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : T) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : T, inner : TInner) => TResult) : IEnumerable<TResult>;
+
+	/**
+	 * Correlates the elements of two sequences based on matching keys. A specified comparer is used to compare keys.
+	 * @param inner The sequence to join to the sequence.
+	 * @param keySelector A function to extract the join key from each element of the source sequence.
+	 * @param innerKeySelector A function to extract the join key from each element of the inner sequence.
+	 * @param resultSelector A function to create a result element from two matching elements.
+	 * @param comparer A comparer to hash and compare keys.
+	 */
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : T) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : T, inner : TInner) => TResult,
+		comparer : (outerKey : TKey, innerKey : TKey) => boolean) : IEnumerable<TResult>;
 
 	/**
 	 * Returns the last element of a sequence.
@@ -480,7 +540,7 @@ declare interface Generator<T> {
 	 * @param source An enumerable whose distinct elements form the second set for the union.
 	 * @param comparer The comparer to compare values.
 	 */
-	union(source : Array<T>, comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
+	union(source : IEnumerable<T>, comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
 
 	/**
 	 * Produces the set union of two sequences according to a specified key selector function.
@@ -489,7 +549,7 @@ declare interface Generator<T> {
 	 * @param comparer The comparer to compare values.
 	 */
 	unionBy<TKey>(
-		source : Array<T>, keySelector : (item : T) => TKey,
+		source : IEnumerable<T>, keySelector : (item : T) => TKey,
 		comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
 
 	/**
@@ -720,12 +780,12 @@ type IEnumerable<T> = Generator<T>;
 			return null;
 		}
 
-		except(source : Array<T> | IEnumerable<T>) : IEnumerable<T>;
+		except(source : IEnumerable<T>) : IEnumerable<T>;
 		except(
-			source : Array<T> | IEnumerable<T>,
+			source : IEnumerable<T>,
 			comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
 		* except(
-			source : Array<T> | IEnumerable<T>,
+			source : IEnumerable<T>,
 			comparer? : (left : T, right : T) => boolean) : IEnumerable<T>
 		{
 			comparer ??= Object.is
@@ -742,10 +802,10 @@ type IEnumerable<T> = Generator<T>;
 		}
 
 		exceptBy<TKey>(
-			source : Array<T> | IEnumerable<T>,
+			source : IEnumerable<T>,
 			keySelector : (item : T) => TKey) : IEnumerable<T>;
 		* exceptBy<TKey>(
-			source : Array<T> | IEnumerable<T>,
+			source : IEnumerable<T>,
 			keySelector : (item : T) => TKey,
 			comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>
 		{
@@ -823,6 +883,69 @@ type IEnumerable<T> = Generator<T>;
 				cache.push((elementSelector as (item : T) => any)(item))
 			}
 			for (const group of groups) yield group;
+		}
+
+		groupJoin<TInner, TKey, TResult>(
+			inner : IEnumerable<TInner>,
+			keySelector : (item : T) => TKey,
+			innerKeySelector : (item : TInner) => TKey,
+			resultSelector : (outer : T, inner : Array<TInner>) => TResult) : IEnumerable<TResult>;
+		groupJoin<TInner, TKey, TResult>(
+			inner : IEnumerable<TInner>,
+			keySelector : (item : T) => TKey,
+			innerKeySelector : (item : TInner) => TKey,
+			resultSelector : (outer : T, inner : Array<TInner>) => TResult,
+			comparer : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
+		* groupJoin<TInner, TKey, TResult>(
+			inner : IEnumerable<TInner>,
+			keySelector : (item : T) => TKey,
+			innerKeySelector : (item : TInner) => TKey,
+			resultSelector : (outer : T, inner : Array<TInner>) => TResult,
+			comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
+		{
+			comparer ??= Object.is;
+			for (const item of this) {
+				const key = keySelector(item)
+				const stack = new Array<TInner>()
+				for (const innerItem of inner) {
+					const innerKey = innerKeySelector(innerItem)
+					if (comparer(key, innerKey)) {
+						stack.push(innerItem)
+					}
+				}
+				yield resultSelector(item, stack)
+			}
+		}
+
+		join<TInner, TKey, TResult>(
+			inner : IEnumerable<TInner>,
+			keySelector : (item : T) => TKey,
+			innerKeySelector : (item : TInner) => TKey,
+			resultSelector : (outer : T, inner : TInner) => TResult) : IEnumerable<TResult>;
+		join<TInner, TKey, TResult>(
+			inner : IEnumerable<TInner>,
+			keySelector : (item : T) => TKey,
+			innerKeySelector : (item : TInner) => TKey,
+			resultSelector : (outer : T, inner : TInner) => TResult,
+			comparer : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>;
+
+		* join<TInner, TKey, TResult>(
+			inner : IEnumerable<TInner>,
+			keySelector : (item : T) => TKey,
+			innerKeySelector : (item : TInner) => TKey,
+			resultSelector : (outer : T, inner : TInner) => TResult,
+			comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
+		{
+			comparer ??= Object.is;
+			for (const item of this) {
+				const key = keySelector(item)
+				for (const innerItem of inner) {
+					const innerKey = innerKeySelector(innerItem)
+					if (comparer(key, innerKey)) {
+						yield resultSelector(item, innerItem)
+					}
+				}
+			}
 		}
 
 		last() : T;
@@ -1107,7 +1230,7 @@ type IEnumerable<T> = Generator<T>;
 		}
 
 		* union(
-			source : Array<T>,
+			source : IEnumerable<T>,
 			comparer? : (left : T, right : T) => boolean) : IEnumerable<T>
 		{
 			comparer ??= Object.is
@@ -1128,7 +1251,7 @@ type IEnumerable<T> = Generator<T>;
 		}
 
 		* unionBy<TKey>(
-			source : Array<T>,
+			source : IEnumerable<T>,
 			keySelector : (item : T) => TKey,
 			comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>
 		{
@@ -1152,14 +1275,15 @@ type IEnumerable<T> = Generator<T>;
 
 		where(predicate : (item : T) => boolean) : IEnumerable<T>;
 		where(predicate : (item : T, index : number) => boolean) : IEnumerable<T>
-		* where(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean))
-			: IEnumerable<T>
+		* where(predicate : ((item : T) => boolean) | ((item : T, index : number) => boolean)) : IEnumerable<T>
 		{
 			let count = 0
 			for (const item of this) {
 				if (predicate(item, count++)) yield item
 			}
 		}
+
+
 	}
 
 	class PartialArrayLike<T> extends Enumerable<T> {

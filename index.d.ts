@@ -82,7 +82,7 @@ declare interface IEnumerable<T> {
 
 	/**
 	 * Returns distinct elements from a sequence by using a specified comparer to compare values.
-	 * @param comparer An comparer to compare values.
+	 * @param comparer A comparer to compare values.
 	 */
 	distinct(comparer : (left : T, right : T) => boolean) : IEnumerable<T>;
 
@@ -96,7 +96,7 @@ declare interface IEnumerable<T> {
 	 * Returns distinct elements from a sequence according to a specified key selector function and using a specified
 	 * comparer to compare keys.
 	 * @param keySelector A function to extract the key for each element.
-	 * @param comparer An comparer to compare keys.
+	 * @param comparer A comparer to compare keys.
 	 */
 	distinctBy<TKey>(
 		keySelector : (item : T) => TKey,
@@ -125,7 +125,7 @@ declare interface IEnumerable<T> {
 	 * Produces the set difference of two sequences by using the specified comparer to compare values.
 	 * @param source An array whose elements that also occur in the first sequence will cause those elements to be
 	 * removed from the returned sequence.
-	 * @param comparer An comparer to compare values.
+	 * @param comparer A comparer to compare values.
 	 */
 	except(
 		source : Array<T> | IEnumerable<T>,
@@ -199,7 +199,7 @@ declare interface IEnumerable<T> {
 	/**
 	 * Groups the elements of a sequence according to a specified key selector function and compares the keys by using a specified comparer.
 	 * @param keySelector A function to extract the key for each element.
-	 * @param comparer An comparer to compare keys.
+	 * @param comparer A comparer to compare keys.
 	 */
 	groupBy<TKey>(
 		keySelector : (item : T) => TKey,
@@ -220,12 +220,72 @@ declare interface IEnumerable<T> {
 	 * and each group's elements are projected by using a specified function.
 	 * @param keySelector A function to extract the key for each element.
 	 * @param elementSelector A function to map each source element to an element in the source.
-	 * @param comparer An comparer to compare keys.
+	 * @param comparer A comparer to compare keys.
 	 */
 	groupBy<TKey, TElement>(
 		keySelector : (item : T) => TKey,
 		elementSelector : (item : T) => TElement,
 		comparer : (left : TKey, right : TKey) => boolean) : IEnumerable<Array<TElement> & { key : TKey }>;
+
+	/**
+	 * Correlates the elements of two sequences based on equality of keys and groups the results. The default equality
+	 * comparer is used to compare keys.
+	 * @param inner The sequence to join to the sequence.
+	 * @param keySelector A function to extract the join key from each element of the source sequence.
+	 * @param innerKeySelector A function to extract the join key from each element of the inner sequence.
+	 * @param resultSelector A function to create a result element from an element from the first sequence and a collection
+	 * of matching elements from the second sequence.
+	 */
+	groupJoin<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : T) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : T, inner : Array<TInner>) => TResult) : IEnumerable<TResult>;
+
+	/**
+	 * Correlates the elements of two sequences based on equality of keys and groups the results. A specified comparer
+	 * is used to compare keys.
+	 * @param inner The sequence to join to the sequence.
+	 * @param keySelector A function to extract the join key from each element of the source sequence.
+	 * @param innerKeySelector A function to extract the join key from each element of the inner sequence.
+	 * @param resultSelector A function to create a result element from an element from the first sequence and a collection
+	 * of matching elements from the second sequence.
+	 * @param comparer A comparer to hash and compare keys.
+	 */
+	groupJoin<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : T) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : T, inner : Array<TInner>) => TResult,
+		comparer : (outerKey : TKey, innerKey : TKey) => boolean) : IEnumerable<TResult>;
+
+	/**
+	 * Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
+	 * @param inner The sequence to join to the sequence.
+	 * @param keySelector A function to extract the join key from each element of the source sequence.
+	 * @param innerKeySelector A function to extract the join key from each element of the inner sequence.
+	 * @param resultSelector A function to create a result element from two matching elements.
+	 */
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : T) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : T, inner : TInner) => TResult) : IEnumerable<TResult>;
+
+	/**
+	 * Correlates the elements of two sequences based on matching keys. A specified comparer is used to compare keys.
+	 * @param inner The sequence to join to the sequence.
+	 * @param keySelector A function to extract the join key from each element of the source sequence.
+	 * @param innerKeySelector A function to extract the join key from each element of the inner sequence.
+	 * @param resultSelector A function to create a result element from two matching elements.
+	 * @param comparer A comparer to hash and compare keys.
+	 */
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : T) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : T, inner : TInner) => TResult,
+		comparer : (outerKey : TKey, innerKey : TKey) => boolean) : IEnumerable<TResult>;
 
 	/**
 	 * Returns the last element of a sequence.
@@ -271,7 +331,7 @@ declare interface IEnumerable<T> {
 
 	/**
 	 * Sorts the elements of a sequence in ascending order.
-	 * @param comparer An comparer to compare keys.
+	 * @param comparer A comparer to compare keys.
 	 */
 	order(comparer : (current : T, exist : T) => number) : IEnumerable<T>;
 
@@ -284,7 +344,7 @@ declare interface IEnumerable<T> {
 	/**
 	 * Sorts the elements of a sequence in ascending order according to a key.
 	 * @param keySelector A function to extract a key from an element.
-	 * @param comparer An comparer to compare keys.
+	 * @param comparer A comparer to compare keys.
 	 */
 	orderBy<TKey>(
 		keySelector : (item : T) => TKey,
@@ -297,7 +357,7 @@ declare interface IEnumerable<T> {
 
 	/**
 	 * Sorts the elements of a sequence in descending order.
-	 * @param comparer An comparer to compare keys.
+	 * @param comparer A comparer to compare keys.
 	 */
 	orderDescending(comparer : (current : T, exist : T) => number) : IEnumerable<T>;
 
@@ -310,7 +370,7 @@ declare interface IEnumerable<T> {
 	/**
 	 * Sorts the elements of a sequence in descending order according to a key.
 	 * @param keySelector A function to extract a key from an element.
-	 * @param comparer An comparer to compare keys.
+	 * @param comparer A comparer to compare keys.
 	 */
 	orderByDescending<TKey>(
 		keySelector : (item : T) => TKey,

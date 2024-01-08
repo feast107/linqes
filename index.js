@@ -189,6 +189,32 @@
             for (const group of groups)
                 yield group;
         }
+        *groupJoin(inner, keySelector, innerKeySelector, resultSelector, comparer) {
+            comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
+            for (const item of this) {
+                const key = keySelector(item);
+                const stack = new Array();
+                for (const innerItem of inner) {
+                    const innerKey = innerKeySelector(innerItem);
+                    if (comparer(key, innerKey)) {
+                        stack.push(innerItem);
+                    }
+                }
+                yield resultSelector(item, stack);
+            }
+        }
+        *join(inner, keySelector, innerKeySelector, resultSelector, comparer) {
+            comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
+            for (const item of this) {
+                const key = keySelector(item);
+                for (const innerItem of inner) {
+                    const innerKey = innerKeySelector(innerItem);
+                    if (comparer(key, innerKey)) {
+                        yield resultSelector(item, innerItem);
+                    }
+                }
+            }
+        }
         last(predicate) {
             const ret = this.lastOrDefault(predicate);
             if (ret == null)
