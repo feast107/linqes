@@ -6,7 +6,7 @@ const enumerable : IEnumerable<number> = list;
 
 const ie : IEnumerable<any> = new Array<number>();
 
-for(const item of enumerable){
+for (const item of enumerable) {
 
 }
 

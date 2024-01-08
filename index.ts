@@ -566,8 +566,6 @@ declare interface Generator<T> {
 	where(predicate : (item : T, index : number) => boolean) : IEnumerable<T>;
 }
 
-type IEnumerable<T> = Generator<T>;
-
 (function () {
 
 	/**
@@ -577,10 +575,10 @@ type IEnumerable<T> = Generator<T>;
 		const concat = Array.prototype.concat;
 		const join = Array.prototype.join;
 		return {
-			concat: function <T>(thisArg : [], ...items : (T | ConcatArray<T>)[]) : T[] {
+			concat: function <T>(thisArg : any, ...items : (T | ConcatArray<T>)[]) : T[] {
 				return concat.call(thisArg, ...items);
 			},
-			join  : function (thisArg : [], separator : string) : string {
+			join  : function (thisArg : any, separator : string) : string {
 				return join.call(thisArg, separator);
 			}
 		};
@@ -1336,7 +1334,7 @@ type IEnumerable<T> = Generator<T>;
 					return this.asEnumerable().concat(enumerable)
 				}
 			}
-			return compatibles.concat.call(this, ...items)
+			return compatibles.concat(this, ...items)
 		}
 
 		elementAt(index : number) : T {
@@ -1423,7 +1421,7 @@ type IEnumerable<T> = Generator<T>;
 			if (arguments.length == 5 || arguments.length == 4) {
 				return this.asEnumerable().join(inner as IEnumerable<TInner>, keySelector, innerKeySelector, resultSelector, comparer)
 			}
-			return compatibles.join.call(this, inner);
+			return compatibles.join(this, inner as string);
 		}
 
 		private splice(
@@ -1507,7 +1505,7 @@ type IEnumerable<T> = Generator<T>;
 		method : any,
 		force : boolean = false)
 	{
-		if (prototype[name] != undefined) {
+		if (prototype[name] != null) {
 			if (!force || Object.keys(compatibles).findIndex(x => x == name) < 0) {
 				return;
 			}
@@ -1553,4 +1551,7 @@ type IEnumerable<T> = Generator<T>;
 			defineProperty(proto, name, method)
 		})
 	});
+
+	// @ts-ignore
+	globalThis.List = Array;
 })()

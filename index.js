@@ -524,7 +524,7 @@
                     return this.asEnumerable().concat(enumerable);
                 }
             }
-            return compatibles.concat.call(this, ...items);
+            return compatibles.concat(this, ...items);
         }
         elementAt(index) {
             return this[index];
@@ -576,7 +576,7 @@
             if (arguments.length == 5 || arguments.length == 4) {
                 return this.asEnumerable().join(inner, keySelector, innerKeySelector, resultSelector, comparer);
             }
-            return compatibles.join.call(this, inner);
+            return compatibles.join(this, inner);
         }
         splice(number, deleteCount, item) {
             throw new Error("Method not implemented.");
@@ -630,7 +630,7 @@
         return Object.getOwnPropertyNames(prototype).filter(x => excepts.find(y => x == y) == null);
     }
     function defineProperty(prototype, name, method, force = false) {
-        if (prototype[name] != undefined) {
+        if (prototype[name] != null) {
             if (!force || Object.keys(compatibles).findIndex(x => x == name) < 0) {
                 return;
             }
@@ -674,4 +674,6 @@
             defineProperty(proto, name, method);
         });
     });
+    // @ts-ignore
+    globalThis.List = Array;
 })();

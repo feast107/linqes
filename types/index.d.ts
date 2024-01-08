@@ -1,4 +1,4 @@
-declare interface IEnumerable<T>{
+declare interface IEnumerable<T> extends Iterable<T> {
 
 	/**
 	 * Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
@@ -543,20 +543,6 @@ declare interface IEnumerable<T>{
 	where(predicate : (item : T, index : number) => boolean) : IEnumerable<T>;
 }
 
-declare class List<T> extends Array<T>{}
-
-/**
- * All iterable types can be IEnumerable
- */
-declare interface RelativeIndexable<T> extends IEnumerable<T> {
-}
-
-declare interface ConcatArray<T> extends IEnumerable<T> {
-}
-
-/**
- * Extended array methods
- */
 declare interface Array<T> {
 
 	/**
@@ -579,8 +565,6 @@ declare interface Array<T> {
 	 * Clears the contents of List.
 	 */
 	clear() : void
-
-	concat(source : IEnumerable<T>) : IEnumerable<T>
 
 	/**
 	 * Determines whether the array contains elements that match the conditions defined by the specified predicate.
@@ -625,19 +609,10 @@ declare interface Array<T> {
 	 * @param index The zero-based index of the element to remove.
 	 */
 	removeAt(index : number) : T | undefined
-
-	join<TInner, TKey, TResult>(
-		inner : IEnumerable<TInner>,
-		keySelector : (item : T) => TKey,
-		innerKeySelector : (item : TInner) => TKey,
-		resultSelector : (outer : T, inner : TInner) => TResult,
-		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
-
 }
 
-/**
- * Extended map methods
- */
+declare class List<T> extends Array<T> {}
+
 declare interface Map<K, V> extends IEnumerable<[K, V]> {
 
 	/**
@@ -667,3 +642,178 @@ declare interface Map<K, V> extends IEnumerable<[K, V]> {
 	 */
 	tryGetValue(key : K, valueGetter : (value : V) => void) : boolean;
 }
+
+
+// #region Extended Compatible
+declare interface RelativeIndexable<T> extends IEnumerable<T> {
+	join<TInner, TKey, TResult>(
+		inner? : IEnumerable<TInner> | string,
+		keySelector? : (item : T) => TKey,
+		innerKeySelector? : (item : TInner) => TKey,
+		resultSelector? : (outer : T, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
+}
+
+declare interface ConcatArray<T> extends IEnumerable<T> {
+	concat(source : IEnumerable<T>) : IEnumerable<T>
+
+	join<TInner, TKey, TResult>(
+		inner? : IEnumerable<TInner> | string | undefined,
+		keySelector? : (item : T) => TKey,
+		innerKeySelector? : (item : TInner) => TKey,
+		resultSelector? : (outer : T, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
+}
+
+declare interface ReadonlyArray<T> {
+	concat(source : IEnumerable<T>) : IEnumerable<T>
+
+	join<TInner, TKey, TResult>(
+		inner? : IEnumerable<TInner> | string | undefined,
+		keySelector? : (item : T) => TKey,
+		innerKeySelector? : (item : TInner) => TKey,
+		resultSelector? : (outer : T, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
+}
+
+declare interface Array<T> {
+	concat(source : IEnumerable<T>) : IEnumerable<T>
+
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : T) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : T, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
+
+}
+
+declare interface Int8Array {
+	concat(source : IEnumerable<number>) : IEnumerable<number>
+
+	join<TInner, TKey, TResult>(
+		inner? : IEnumerable<TInner> | string,
+		keySelector? : (item : number) => TKey,
+		innerKeySelector? : (item : TInner) => TKey,
+		resultSelector? : (outer : number, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
+}
+
+declare interface Uint8Array {
+	concat(source : IEnumerable<number>) : IEnumerable<number>
+
+	join<TInner, TKey, TResult>(
+		inner? : IEnumerable<TInner> | string,
+		keySelector? : (item : number) => TKey,
+		innerKeySelector? : (item : TInner) => TKey,
+		resultSelector? : (outer : number, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
+}
+
+declare interface Uint8ClampedArray {
+	concat(source : IEnumerable<number>) : IEnumerable<number>
+
+	join<TInner, TKey, TResult>(
+		inner? : IEnumerable<TInner> | string,
+		keySelector? : (item : number) => TKey,
+		innerKeySelector? : (item : TInner) => TKey,
+		resultSelector? : (outer : number, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
+}
+
+declare interface Int16Array {
+	concat(source : IEnumerable<number>) : IEnumerable<number>
+
+	join<TInner, TKey, TResult>(
+		inner? : IEnumerable<TInner> | string,
+		keySelector? : (item : number) => TKey,
+		innerKeySelector? : (item : TInner) => TKey,
+		resultSelector? : (outer : number, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
+}
+
+declare interface Uint16Array {
+	concat(source : IEnumerable<number>) : IEnumerable<number>
+
+	join<TInner, TKey, TResult>(
+		inner? : IEnumerable<TInner> | string,
+		keySelector? : (item : number) => TKey,
+		innerKeySelector? : (item : TInner) => TKey,
+		resultSelector? : (outer : number, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
+}
+
+declare interface Int32Array {
+	concat(source : IEnumerable<number>) : IEnumerable<number>
+
+	join<TInner, TKey, TResult>(
+		inner? : IEnumerable<TInner> | string,
+		keySelector? : (item : number) => TKey,
+		innerKeySelector? : (item : TInner) => TKey,
+		resultSelector? : (outer : number, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
+}
+
+declare interface Uint32Array {
+	concat(source : IEnumerable<number>) : IEnumerable<number>
+
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : number) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : number, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
+
+}
+
+declare interface Float32Array {
+	concat(source : IEnumerable<number>) : IEnumerable<number>
+
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : number) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : number, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
+
+}
+
+declare interface Float64Array {
+	concat(source : IEnumerable<number>) : IEnumerable<number>
+
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : number) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : number, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
+
+}
+
+declare interface BigInt64Array {
+	concat(source : IEnumerable<bigint>) : IEnumerable<bigint>
+
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : bigint) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : bigint, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
+
+}
+
+declare interface BigUint64Array {
+	concat(source : IEnumerable<bigint>) : IEnumerable<bigint>
+
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner>,
+		keySelector : (item : bigint) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : bigint, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
+
+}
+
+// #region Extended Compatible
+
+

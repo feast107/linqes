@@ -1,10 +1,14 @@
 {
 	"name" : "linqes",
-	"version" : "1.0.5",
+	"version" : "1.1.0",
 	"description" : "linq in es, automated extensions on prototype",
 	"main" : "index.js",
 	"types" : "types/index.d.ts",
 	"author" : "Feast",
+	"scripts" : {
+		"build" : "tsc",
+		"publish" : "npm publish"
+	},
 	"repository" : {
 		"type" : "git",
 		"url" : "https://github.com/feast107/linqes.git"
@@ -21,9 +25,6 @@
 		"generator",
 		"iterator"
 	],
-	"dependencies" : {
-
-	},
 	"devDependencies" : {
 		"@types/node" : "^20.10.6"
 	}
