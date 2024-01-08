@@ -3,7 +3,7 @@
 	"version" : "1.0.4",
 	"description" : "linq in es, automated extensions on prototype",
 	"main" : "index.js",
-	"types" : "index.d.ts",
+	"types" : "types/index.d.ts",
 	"author" : "Feast",
 	"repository" : {
 		"type" : "git",
