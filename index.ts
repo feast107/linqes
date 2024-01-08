@@ -1298,8 +1298,6 @@ type IEnumerable<T> = Generator<T>;
 				if (predicate(item, count++)) yield item
 			}
 		}
-
-
 	}
 
 	class PartialArrayLike<T> extends Enumerable<T> {

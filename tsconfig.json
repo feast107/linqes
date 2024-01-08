@@ -6,6 +6,7 @@
 		],
 	},
 	"files" : [
+		"./__tests__/test.ts",
 		"index.ts"
 	],
 }

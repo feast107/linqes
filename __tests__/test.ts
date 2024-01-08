@@ -1,12 +1,13 @@
 import '../types/index'
 
 
-let enumerable : IEnumerable<number>;
+const list = new List<number>()
+const enumerable : IEnumerable<number> = list;
 
-enumerable = new Array<number>();
+const ie : IEnumerable<any> = new Array<number>();
 
-let str : IEnumerable<string>;
+for(const item of enumerable){
 
-str = '';
+}
 
-(enumerable as ConcatArray<number>)
+const iter = enumerable[Symbol.iterator]

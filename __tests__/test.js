@@ -1,8 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-require("../types/index");
-var enumerable;
-enumerable = new Array();
-var str;
-str = '';
-enumerable;
+import '../types/index';
+const list = new List();
+const enumerable = list;
+for (const item of enumerable) {
+}
+const iter = enumerable[Symbol.iterator];

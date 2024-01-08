@@ -1,4 +1,4 @@
-declare interface IEnumerable<T> {
+declare interface IEnumerable<T>{
 
 	/**
 	 * Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
@@ -119,7 +119,7 @@ declare interface IEnumerable<T> {
 	 * @param source An array whose elements that also occur in the first sequence will cause those elements to be
 	 * removed from the returned sequence.
 	 */
-	except(source : Array<T> | IEnumerable<T>) : IEnumerable<T>;
+	except(source : IEnumerable<T>) : IEnumerable<T>;
 
 	/**
 	 * Produces the set difference of two sequences by using the specified comparer to compare values.
@@ -128,7 +128,7 @@ declare interface IEnumerable<T> {
 	 * @param comparer A comparer to compare values.
 	 */
 	except(
-		source : Array<T> | IEnumerable<T>,
+		source : IEnumerable<T>,
 		comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
 
 	/**
@@ -138,7 +138,7 @@ declare interface IEnumerable<T> {
 	 * @param keySelector A function to extract the key for each element.
 	 */
 	exceptBy<TKey>(
-		source : Array<T> | IEnumerable<T>,
+		source : IEnumerable<T>,
 		keySelector : (item : T) => TKey) : IEnumerable<T>;
 
 	/**
@@ -149,7 +149,7 @@ declare interface IEnumerable<T> {
 	 * @param comparer The comparer to compare values.
 	 */
 	exceptBy<TKey>(
-		source : Array<T> | IEnumerable<T>,
+		source : IEnumerable<T>,
 		keySelector : (item : T) => TKey,
 		comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
 
@@ -517,7 +517,7 @@ declare interface IEnumerable<T> {
 	 * @param source An enumerable whose distinct elements form the second set for the union.
 	 * @param comparer The comparer to compare values.
 	 */
-	union(source : Array<T>, comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
+	union(source : IEnumerable<T>, comparer? : (left : T, right : T) => boolean) : IEnumerable<T>;
 
 	/**
 	 * Produces the set union of two sequences according to a specified key selector function.
@@ -526,7 +526,7 @@ declare interface IEnumerable<T> {
 	 * @param comparer The comparer to compare values.
 	 */
 	unionBy<TKey>(
-		source : Array<T>, keySelector : (item : T) => TKey,
+		source : IEnumerable<T>, keySelector : (item : T) => TKey,
 		comparer? : (left : TKey, right : TKey) => boolean) : IEnumerable<T>;
 
 	/**
@@ -542,6 +542,8 @@ declare interface IEnumerable<T> {
 	 */
 	where(predicate : (item : T, index : number) => boolean) : IEnumerable<T>;
 }
+
+declare class List<T> extends Array<T>{}
 
 /**
  * All iterable types can be IEnumerable
