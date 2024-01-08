@@ -549,11 +549,7 @@ declare interface IEnumerable<T> {
 declare interface RelativeIndexable<T> extends IEnumerable<T> {
 }
 
-/**
- * Base declaration
- */
-declare interface ReadonlyArray<T> {
-	concat(items : Array<T>) : Array<T>
+declare interface ConcatArray<T> extends IEnumerable<T> {
 }
 
 /**
@@ -581,12 +577,6 @@ declare interface Array<T> {
 	 * Clears the contents of List.
 	 */
 	clear() : void
-
-	/**
-	 * Base concat mathod
-	 * @param items items to be concat
-	 */
-	concat(items : Array<T>) : Array<T>
 
 	/**
 	 * Determines whether the array contains elements that match the conditions defined by the specified predicate.

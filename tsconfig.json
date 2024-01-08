@@ -4,7 +4,6 @@
 		"lib" : [
 			"es6"
 		],
-		"skipLibCheck" : true
 	},
 	"files" : [
 		"index.ts"

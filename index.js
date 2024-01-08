@@ -21,6 +21,21 @@
 // SOFTWARE.
 // noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
 (function () {
+    /**
+     * Compatible array's existing types cache
+     */
+    const compatibles = (function () {
+        const concat = Array.prototype.concat;
+        const join = Array.prototype.join;
+        return {
+            concat: function (thisArg, ...items) {
+                return concat.call(thisArg, ...items);
+            },
+            join: function (thisArg, separator) {
+                return join.call(thisArg, separator);
+            }
+        };
+    })();
     class Enumerable {
         [Symbol.iterator]() {
             return this;
@@ -502,6 +517,15 @@
         clear() {
             this.splice(0, this.length);
         }
+        concat(...items) {
+            if (arguments.length == 1) {
+                const enumerable = arguments[0];
+                if (enumerable.__proto__.__proto__ == Generator) {
+                    return this.asEnumerable().concat(enumerable);
+                }
+            }
+            return compatibles.concat.call(this, ...items);
+        }
         elementAt(index) {
             return this[index];
         }
@@ -547,6 +571,12 @@
         }
         push(...items) {
             throw new Error("Method not implemented.");
+        }
+        join(inner, keySelector, innerKeySelector, resultSelector, comparer) {
+            if (arguments.length == 5 || arguments.length == 4) {
+                return this.asEnumerable().join(inner, keySelector, innerKeySelector, resultSelector, comparer);
+            }
+            return compatibles.join.call(this, inner);
         }
         splice(number, deleteCount, item) {
             throw new Error("Method not implemented.");
@@ -599,9 +629,12 @@
     function propertyNames(prototype) {
         return Object.getOwnPropertyNames(prototype).filter(x => excepts.find(y => x == y) == null);
     }
-    function defineProperty(prototype, name, method) {
-        if (prototype[name] != undefined)
-            return;
+    function defineProperty(prototype, name, method, force = false) {
+        if (prototype[name] != undefined) {
+            if (!force || Object.keys(compatibles).findIndex(x => x == name) < 0) {
+                return;
+            }
+        }
         Object.defineProperty(prototype, name, {
             value: method,
             writable: false
@@ -627,7 +660,7 @@
         defineProperty(Map.prototype, name, PartialMap.prototype[name]);
     });
     propertyNames(PartialArray.prototype).forEach(name => {
-        defineProperty(Array.prototype, name, PartialArray.prototype[name]);
+        defineProperty(Array.prototype, name, PartialArray.prototype[name], true);
     });
     propertyNames(PartialArrayLike.prototype).forEach(name => {
         iterable.forEach(proto => {
