@@ -671,9 +671,10 @@ declare interface Generator<T> {
 	}
 
 	class Enumerable<T> implements IEnumerable<T> {
-		[Symbol.iterator]() : Generator<T> {
-			return this;
+		[Symbol.iterator]() : Iterator<T> {
+			return this
 		}
+
 
 		next(...args : [] | [unknown]) : IteratorResult<T, T>;
 		next(...args : [] | [unknown]) : IteratorResult<T, T>;
@@ -1330,6 +1331,7 @@ declare interface Generator<T> {
 		{
 			if (arguments.length == 1) {
 				const enumerable = arguments[0]
+				// noinspection JSUnresolvedReference
 				if (enumerable.__proto__.__proto__ == Generator) {
 					return this.asEnumerable().concat(enumerable)
 				}
@@ -1484,7 +1486,7 @@ declare interface Generator<T> {
 			throw new Error("Method not implemented.");
 		}
 
-		private values() : Generator<V> {
+		private values() : Iterable<V> {
 			throw new Error("Method not implemented.");
 		}
 	}

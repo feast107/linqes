@@ -520,6 +520,7 @@
         concat(...items) {
             if (arguments.length == 1) {
                 const enumerable = arguments[0];
+                // noinspection JSUnresolvedReference
                 if (enumerable.__proto__.__proto__ == Generator) {
                     return this.asEnumerable().concat(enumerable);
                 }

@@ -2,8 +2,11 @@
 	"compilerOptions" : {
 		"target" : "es6",
 		"lib" : [
+			"dom",
 			"es6"
 		],
+		"moduleResolution" : "Node",
+		"module" : "ES6"
 	},
 	"files" : [
 		"./__tests__/test.ts",
