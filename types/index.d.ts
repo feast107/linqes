@@ -611,7 +611,8 @@ declare interface Array<T> {
 	removeAt(index : number) : T | undefined
 }
 
-declare class List<T> extends Array<T> {}
+declare class List<T> extends Array<T> {
+}
 
 declare interface Map<K, V> extends IEnumerable<[K, V]> {
 

@@ -710,7 +710,7 @@ declare interface Generator<T> {
 		}
 
 		* append(element : T) : IEnumerable<T> {
-			for (const item of this) yield item
+			yield * this
 			yield element
 		}
 
@@ -731,8 +731,8 @@ declare interface Generator<T> {
 		}
 
 		* concat(source : IEnumerable<T>) : IEnumerable<T> {
-			for (const item of this) yield item
-			for (const item of source) yield item
+			yield * this
+			yield * source
 		}
 
 		contains(value : T) : boolean;
@@ -763,7 +763,7 @@ declare interface Generator<T> {
 					stack.push(item)
 				}
 			}
-			for (const item of stack) yield item
+			yield * stack
 		}
 
 		distinctBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<T>;
@@ -778,7 +778,7 @@ declare interface Generator<T> {
 					stack.push(item)
 				}
 			}
-			for (const item of stack) yield item
+			yield * stack
 		}
 
 		elementAt(index : number) : T {
@@ -995,9 +995,7 @@ declare interface Generator<T> {
 		order() : IEnumerable<T>;
 		order(comparer : (current : T, exist : T) => number) : IEnumerable<T>;
 		* order(comparer? : (current : T, exist : T) => number) : IEnumerable<T> {
-			comparer ??= (
-				left,
-				right) => left as any - (right as any)
+			comparer ??= (left, right) => left as any - (right as any)
 			const stack = []
 			for (const item of this) {
 				const index = stack.findIndex((x : any) => comparer(item, x) <= 0)
@@ -1007,6 +1005,7 @@ declare interface Generator<T> {
 					stack.splice(index, 0, item)
 				}
 			}
+			yield * stack
 		}
 
 		orderBy<TKey>(keySelector : (item : T) => TKey) : IEnumerable<T>;
@@ -1028,7 +1027,7 @@ declare interface Generator<T> {
 					stack.splice(index, 0, item)
 				}
 			}
-			for (const item of stack) yield item
+			yield * stack
 		}
 
 		orderByDescending<TKey>(keySelector : (item : T) => TKey) : IEnumerable<T>;
@@ -1050,7 +1049,7 @@ declare interface Generator<T> {
 					stack.splice(index, 0, item)
 				}
 			}
-			for (const item of stack) yield item
+			yield * stack
 		}
 
 		orderDescending() : IEnumerable<T>;
@@ -1068,12 +1067,12 @@ declare interface Generator<T> {
 					stack.splice(index, 0, item)
 				}
 			}
-			for (const item of stack) yield item
+			yield * stack
 		}
 
 		* prepend(element : T) : IEnumerable<T> {
 			yield element;
-			for (const item of this) yield item
+			yield * this
 		}
 
 		* reverse() : IEnumerable<T> {
@@ -1206,9 +1205,7 @@ declare interface Generator<T> {
 					stack.shift()
 				}
 			}
-			for (const item of stack) {
-				yield item
-			}
+			yield * stack
 		}
 
 		takeWhile(predicate : (item : T) => boolean) : IEnumerable<T>;
@@ -1260,9 +1257,7 @@ declare interface Generator<T> {
 					union.push(item)
 				}
 			}
-			for (const item of union) {
-				yield item
-			}
+			yield * union
 		}
 
 		* unionBy<TKey>(
@@ -1282,9 +1277,7 @@ declare interface Generator<T> {
 					union.push(item)
 				}
 			}
-			for (const item of union) {
-				yield item
-			}
+			yield * union
 		}
 
 
@@ -1301,7 +1294,7 @@ declare interface Generator<T> {
 
 	class PartialArrayLike<T> extends Enumerable<T> {
 		* asEnumerable() : IEnumerable<T> {
-			for (const item of this) yield item;
+			yield * this
 		}
 	}
 
@@ -1319,7 +1312,7 @@ declare interface Generator<T> {
 		}
 
 		* asEnumerable() : IEnumerable<T> {
-			for (const item of this) yield item;
+			yield * this
 		}
 
 		clear() : void {
