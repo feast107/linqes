@@ -65,8 +65,7 @@
             return this.firstOrDefault(predicate) != null;
         }
         *append(element) {
-            for (const item of this)
-                yield item;
+            yield* this;
             yield element;
         }
         asEnumerable() {
@@ -84,10 +83,8 @@
             yield chunk;
         }
         *concat(source) {
-            for (const item of this)
-                yield item;
-            for (const item of source)
-                yield item;
+            yield* this;
+            yield* source;
         }
         contains(value, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
@@ -112,8 +109,7 @@
                     stack.push(item);
                 }
             }
-            for (const item of stack)
-                yield item;
+            yield* stack;
         }
         *distinctBy(keySelector, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
@@ -123,8 +119,7 @@
                     stack.push(item);
                 }
             }
-            for (const item of stack)
-                yield item;
+            yield* stack;
         }
         elementAt(index) {
             const ret = this.elementAtOrDefault(index);
@@ -201,8 +196,7 @@
                 }
                 cache.push(elementSelector(item));
             }
-            for (const group of groups)
-                yield group;
+            yield* groups;
         }
         *groupJoin(inner, keySelector, innerKeySelector, resultSelector, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
@@ -274,8 +268,7 @@
                     stack.splice(index, 0, item);
                 }
             }
-            for (const item of stack)
-                yield item;
+            yield* stack;
         }
         *orderByDescending(keySelector, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = (left, right) => left - right);
@@ -289,8 +282,7 @@
                     stack.splice(index, 0, item);
                 }
             }
-            for (const item of stack)
-                yield item;
+            yield* stack;
         }
         *orderDescending(comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = (left, right) => left - right);
@@ -304,13 +296,11 @@
                     stack.splice(index, 0, item);
                 }
             }
-            for (const item of stack)
-                yield item;
+            yield* stack;
         }
         *prepend(element) {
             yield element;
-            for (const item of this)
-                yield item;
+            yield* this;
         }
         *reverse() {
             const arr = [];
@@ -422,9 +412,7 @@
                     stack.shift();
                 }
             }
-            for (const item of stack) {
-                yield item;
-            }
+            yield* stack;
         }
         *takeWhile(predicate) {
             let index = 0;
@@ -466,9 +454,7 @@
                     union.push(item);
                 }
             }
-            for (const item of union) {
-                yield item;
-            }
+            yield* union;
         }
         *unionBy(source, keySelector, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
@@ -483,9 +469,7 @@
                     union.push(item);
                 }
             }
-            for (const item of union) {
-                yield item;
-            }
+            yield* union;
         }
         *where(predicate) {
             let count = 0;
@@ -497,8 +481,7 @@
     }
     class PartialArrayLike extends Enumerable {
         *asEnumerable() {
-            for (const item of this)
-                yield item;
+            yield* this;
         }
     }
     class PartialArray extends PartialArrayLike {
@@ -511,8 +494,7 @@
             }
         }
         *asEnumerable() {
-            for (const item of this)
-                yield item;
+            yield* this;
         }
         clear() {
             this.splice(0, this.length);
