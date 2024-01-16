@@ -690,6 +690,14 @@ declare interface Array<T> extends IEnumerable<T> {
 }
 
 declare interface String extends IEnumerable<string> {
+	concat(source : IEnumerable<string>) : IEnumerable<string>
+
+	join<TInner, TKey, TResult>(
+		inner : IEnumerable<TInner> | string,
+		keySelector : (item : string) => TKey,
+		innerKeySelector : (item : TInner) => TKey,
+		resultSelector : (outer : string, inner : TInner) => TResult,
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
 }
 
 declare interface Int8Array extends IEnumerable<number> {
@@ -794,7 +802,7 @@ declare interface Float64Array extends IEnumerable<number> {
 
 }
 
-declare interface BigInt64Array extends IEnumerable<number> {
+declare interface BigInt64Array extends IEnumerable<bigint> {
 	concat(source : IEnumerable<bigint>) : IEnumerable<bigint>
 
 	join<TInner, TKey, TResult>(
@@ -806,7 +814,7 @@ declare interface BigInt64Array extends IEnumerable<number> {
 
 }
 
-declare interface BigUint64Array extends IEnumerable<number> {
+declare interface BigUint64Array extends IEnumerable<bigint> {
 	concat(source : IEnumerable<bigint>) : IEnumerable<bigint>
 
 	join<TInner, TKey, TResult>(
