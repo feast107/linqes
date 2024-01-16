@@ -543,7 +543,7 @@ declare interface IEnumerable<T> extends Iterable<T> {
 	where(predicate : (item : T, index : number) => boolean) : IEnumerable<T>;
 }
 
-declare interface Array<T> {
+declare interface Array<T> extends IEnumerable<T> {
 
 	/**
 	 * Adds the given object to the end of this list. The size of the list is
@@ -648,7 +648,7 @@ declare interface Map<K, V> extends IEnumerable<[K, V]> {
 // #region Extended Compatible
 declare interface RelativeIndexable<T> extends IEnumerable<T> {
 	join<TInner, TKey, TResult>(
-		inner? : IEnumerable<TInner> | string,
+		inner? : IEnumerable<TInner> | string | undefined,
 		keySelector? : (item : T) => TKey,
 		innerKeySelector? : (item : TInner) => TKey,
 		resultSelector? : (outer : T, inner : TInner) => TResult,
@@ -666,7 +666,7 @@ declare interface ConcatArray<T> extends IEnumerable<T> {
 		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
 }
 
-declare interface ReadonlyArray<T> {
+declare interface ReadonlyArray<T> extends IEnumerable<T> {
 	concat(source : IEnumerable<T>) : IEnumerable<T>
 
 	join<TInner, TKey, TResult>(
@@ -677,7 +677,7 @@ declare interface ReadonlyArray<T> {
 		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
 }
 
-declare interface Array<T> {
+declare interface Array<T> extends IEnumerable<T> {
 	concat(source : IEnumerable<T>) : IEnumerable<T>
 
 	join<TInner, TKey, TResult>(
@@ -689,7 +689,10 @@ declare interface Array<T> {
 
 }
 
-declare interface Int8Array {
+declare interface String extends IEnumerable<string> {
+}
+
+declare interface Int8Array extends IEnumerable<number> {
 	concat(source : IEnumerable<number>) : IEnumerable<number>
 
 	join<TInner, TKey, TResult>(
@@ -700,7 +703,7 @@ declare interface Int8Array {
 		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
 }
 
-declare interface Uint8Array {
+declare interface Uint8Array extends IEnumerable<number> {
 	concat(source : IEnumerable<number>) : IEnumerable<number>
 
 	join<TInner, TKey, TResult>(
@@ -711,7 +714,7 @@ declare interface Uint8Array {
 		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
 }
 
-declare interface Uint8ClampedArray {
+declare interface Uint8ClampedArray extends IEnumerable<number> {
 	concat(source : IEnumerable<number>) : IEnumerable<number>
 
 	join<TInner, TKey, TResult>(
@@ -722,7 +725,7 @@ declare interface Uint8ClampedArray {
 		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
 }
 
-declare interface Int16Array {
+declare interface Int16Array extends IEnumerable<number> {
 	concat(source : IEnumerable<number>) : IEnumerable<number>
 
 	join<TInner, TKey, TResult>(
@@ -733,7 +736,7 @@ declare interface Int16Array {
 		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
 }
 
-declare interface Uint16Array {
+declare interface Uint16Array extends IEnumerable<number> {
 	concat(source : IEnumerable<number>) : IEnumerable<number>
 
 	join<TInner, TKey, TResult>(
@@ -744,7 +747,7 @@ declare interface Uint16Array {
 		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
 }
 
-declare interface Int32Array {
+declare interface Int32Array extends IEnumerable<number> {
 	concat(source : IEnumerable<number>) : IEnumerable<number>
 
 	join<TInner, TKey, TResult>(
@@ -755,7 +758,7 @@ declare interface Int32Array {
 		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
 }
 
-declare interface Uint32Array {
+declare interface Uint32Array extends IEnumerable<number> {
 	concat(source : IEnumerable<number>) : IEnumerable<number>
 
 	join<TInner, TKey, TResult>(
@@ -767,7 +770,7 @@ declare interface Uint32Array {
 
 }
 
-declare interface Float32Array {
+declare interface Float32Array extends IEnumerable<number> {
 	concat(source : IEnumerable<number>) : IEnumerable<number>
 
 	join<TInner, TKey, TResult>(
@@ -779,7 +782,7 @@ declare interface Float32Array {
 
 }
 
-declare interface Float64Array {
+declare interface Float64Array extends IEnumerable<number> {
 	concat(source : IEnumerable<number>) : IEnumerable<number>
 
 	join<TInner, TKey, TResult>(
@@ -791,7 +794,7 @@ declare interface Float64Array {
 
 }
 
-declare interface BigInt64Array {
+declare interface BigInt64Array extends IEnumerable<number> {
 	concat(source : IEnumerable<bigint>) : IEnumerable<bigint>
 
 	join<TInner, TKey, TResult>(
@@ -803,7 +806,7 @@ declare interface BigInt64Array {
 
 }
 
-declare interface BigUint64Array {
+declare interface BigUint64Array extends IEnumerable<number> {
 	concat(source : IEnumerable<bigint>) : IEnumerable<bigint>
 
 	join<TInner, TKey, TResult>(

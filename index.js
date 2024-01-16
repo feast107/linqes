@@ -196,7 +196,8 @@
                 }
                 cache.push(elementSelector(item));
             }
-            yield* groups;
+            for (const group of groups)
+                yield group;
         }
         *groupJoin(inner, keySelector, innerKeySelector, resultSelector, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = Object.is);
@@ -255,6 +256,7 @@
                     stack.splice(index, 0, item);
                 }
             }
+            yield* stack;
         }
         *orderBy(keySelector, comparer) {
             comparer !== null && comparer !== void 0 ? comparer : (comparer = (left, right) => left - right);

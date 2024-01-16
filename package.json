@@ -1,6 +1,6 @@
 {
 	"name" : "linqes",
-	"version" : "1.1.0",
+	"version" : "1.1.1",
 	"description" : "linq in es, automated extensions on prototype",
 	"main" : "index.js",
 	"types" : "types/index.d.ts",
