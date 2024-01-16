@@ -648,11 +648,11 @@ declare interface Map<K, V> extends IEnumerable<[K, V]> {
 // #region Extended Compatible
 declare interface RelativeIndexable<T> extends IEnumerable<T> {
 	join<TInner, TKey, TResult>(
-		inner? : IEnumerable<TInner> | string | undefined,
+		inner? : IEnumerable<TInner>,
 		keySelector? : (item : T) => TKey,
 		innerKeySelector? : (item : TInner) => TKey,
 		resultSelector? : (outer : T, inner : TInner) => TResult,
-		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult> | string
+		comparer? : ((outerKey : TKey, innerKey : TKey) => boolean)) : IEnumerable<TResult>
 }
 
 declare interface ConcatArray<T> extends IEnumerable<T> {
@@ -693,7 +693,7 @@ declare interface String extends IEnumerable<string> {
 	concat(source : IEnumerable<string>) : IEnumerable<string>
 
 	join<TInner, TKey, TResult>(
-		inner : IEnumerable<TInner> | string,
+		inner : IEnumerable<TInner>,
 		keySelector : (item : string) => TKey,
 		innerKeySelector : (item : TInner) => TKey,
 		resultSelector : (outer : string, inner : TInner) => TResult,
