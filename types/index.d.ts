@@ -647,6 +647,8 @@ declare interface Map<K, V> extends IEnumerable<[K, V]> {
 
 // #region Extended Compatible
 declare interface RelativeIndexable<T> extends IEnumerable<T> {
+	concat(source : IEnumerable<T>) : IEnumerable<T>
+
 	join<TInner, TKey, TResult>(
 		inner? : IEnumerable<TInner>,
 		keySelector? : (item : T) => TKey,
